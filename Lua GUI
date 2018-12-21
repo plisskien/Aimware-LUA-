@@ -85,6 +85,28 @@ draw.SetFont(font2)
            draw.Color(150, 150, 150, 255)
            end
           draw.Text(910, 800, "_____")
+		  
+		  
+		   if input.IsButtonDown( 86 ) then
+          draw.Color(128, 0, 0, 255)
+           else
+           draw.Color(150, 150, 150, 255)
+           end
+          draw.Text(25, 650, "Override")
+		  
+		   if input.IsButtonDown( 67 ) then
+          draw.Color(128, 0, 0, 255)
+           else
+           draw.Color(150, 150, 150, 255)
+           end
+          draw.Text(25, 700, "Rapid Fire")
+		  
+		  if input.IsButtonDown( 88 ) then
+          draw.Color(128, 0, 0, 255)
+           else
+           draw.Color(150, 150, 150, 255)
+           end
+          draw.Text(25, 750, "Slow Walk")
            
 
 end
