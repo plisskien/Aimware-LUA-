@@ -1,0 +1,92 @@
+local VA_Pitch, VA_Yaw, VA_Roll;
+local alpha = 0
+local p_local = entities.GetLocalPlayer();
+
+
+
+function UCMD_GetAngles( UCMD )
+   VA_Pitch, VA_Yaw, VA_Roll = UCMD:GetViewAngles();
+    if input.IsButtonDown( 32 ) then
+        if alpha < 248 then
+            alpha = alpha + 8
+        end
+    else
+        if alpha > 7 then
+            alpha = alpha - 8
+        end
+    end
+    
+end
+
+callbacks.Register( 'CreateMove', 'GetAngles', UCMD_GetAngles );
+
+
+function draw_buttons()
+if entities.GetLocalPlayer() == nil then
+     return
+end
+
+local vx = p_local:GetPropFloat( "localdata", "m_vecVelocity[0]" );
+local vy = p_local:GetPropFloat( "localdata", "m_vecVelocity[1]" );
+local speed = math.floor(math.min(10000, math.sqrt(vx*vx + vy*vy) + 0.5))
+
+local x, y = draw.GetScreenSize()
+
+local font1 = draw.CreateFont('RawengulkSank', 43)
+local font2 = draw.CreateFont('RawengulkSank', 15)
+
+draw.SetFont(font2)
+
+          draw.Color(235, 235, 235, alpha)
+           draw.TextShadow(945, 575, "speed")
+           draw.Color(128, 0, 0, alpha)
+           draw.FilledRect( 962, 570, 962 + (speed / 6), 575 )
+           draw.FilledRect( 962 - (speed / 6), 570, 962, 575 )
+           draw.Color(0, 0, 0, alpha)
+           draw.OutlinedRect( 962 - (speed / 6), 570, 962 + (speed / 6), 575 )
+                   
+           draw.SetFont(font1)
+
+          if input.IsButtonDown( 87 ) then
+          draw.Color(128, 0, 0, 255)
+           else
+           draw.Color(150, 150, 150, 255)
+           end
+          draw.Text(946, 750, "W")
+           
+
+           if input.IsButtonDown( 83 ) then
+          draw.Color(128, 0, 0, 255)
+           else
+           draw.Color(150, 150, 150, 255)
+           end
+          draw.Text(952, 790, "S")
+           
+           
+           if input.IsButtonDown( 65 ) then
+          draw.Color(128, 0, 0, 255)
+           else
+           draw.Color(150, 150, 150, 255)
+           end
+          draw.Text(912, 790, "A")
+           
+           
+           if input.IsButtonDown( 68 ) then
+          draw.Color(128, 0, 0, 255)
+           else
+           draw.Color(150, 150, 150, 255)
+           end
+          draw.Text(990, 790, "D")
+           
+           
+           if input.IsButtonDown( 32 ) then
+          draw.Color(128, 0, 0, 255)
+           else
+           draw.Color(150, 150, 150, 255)
+           end
+          draw.Text(910, 800, "_____")
+           
+
+end
+
+callbacks.Register('Draw', 'draw_buttons', draw_buttons);
