@@ -1,3 +1,4 @@
+
 local VA_Pitch, VA_Yaw, VA_Roll;
 local alpha = 0
 local p_local = entities.GetLocalPlayer();
@@ -34,16 +35,11 @@ local x, y = draw.GetScreenSize()
 
 local font1 = draw.CreateFont('RawengulkSank', 43)
 local font2 = draw.CreateFont('RawengulkSank', 15)
+local font3 = draw.CreateFont('Verdana', 30, 700)
 
 draw.SetFont(font2)
 
-          draw.Color(235, 235, 235, alpha)
-           draw.TextShadow(945, 575, "speed")
-           draw.Color(128, 0, 0, alpha)
-           draw.FilledRect( 962, 570, 962 + (speed / 6), 575 )
-           draw.FilledRect( 962 - (speed / 6), 570, 962, 575 )
-           draw.Color(0, 0, 0, alpha)
-           draw.OutlinedRect( 962 - (speed / 6), 570, 962 + (speed / 6), 575 )
+         
                    
            draw.SetFont(font1)
 
@@ -86,27 +82,28 @@ draw.SetFont(font2)
            end
           draw.Text(910, 800, "_____")
 		  
+		  draw.SetFont(font3)
 		  
 		   if input.IsButtonDown( 86 ) then
-          draw.Color(128, 0, 0, 255)
+          draw.Color(0, 255, 0, 255)
            else
-           draw.Color(150, 150, 150, 255)
+           draw.Color(150, 150, 150, 0)
            end
-          draw.Text(25, 650, "Override")
+          draw.Text(905, 850, "Override")
 		  
 		   if input.IsButtonDown( 67 ) then
-          draw.Color(128, 0, 0, 255)
+          draw.Color(0, 255, 0, 255)
            else
-           draw.Color(150, 150, 150, 255)
+           draw.Color(150, 150, 150, 0)
            end
-          draw.Text(25, 700, "Rapid Fire")
+          draw.Text(895, 850, "Rapid Fire")
 		  
 		  if input.IsButtonDown( 88 ) then
-          draw.Color(128, 0, 0, 255)
+          draw.Color(0, 255, 0, 255)
            else
-           draw.Color(150, 150, 150, 255)
+           draw.Color(150, 150, 150, 0)
            end
-          draw.Text(25, 750, "Slow Walk")
+          draw.Text(895, 850, "Slow Walk")
            
 
 end
