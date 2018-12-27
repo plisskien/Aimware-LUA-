@@ -343,3 +343,96 @@ end
 
 callbacks.Register( "Draw", "Disable Post Processing", PostProcessing )
 
+
+
+
+--Extra Stuff
+
+local vis_main = gui.Reference('SETTINGS', "Miscellaneous")
+local box = gui.Groupbox( vis_main, "Extra Stuff", 0, 260, 213, 105 );
+local ShowImpactsCheckbox = gui.Checkbox( box, "lua_showimpacts", "Show Impacts", 0 );
+local CustomHitsounds_Combo = gui.Combobox(box, 'Custom_Hitsounds',"Custom Hitsound", "Off", "Metallic", "Paintcan Impact")
+
+
+--showimpacts
+
+local function showimpacts()
+	if ShowImpactsCheckbox:GetValue() then
+		client.SetConVar("sv_showimpacts", 1, true)
+	else
+		client.SetConVar("sv_showimpacts", 0, true)
+	end
+end
+callbacks.Register("Draw", "showimpacts", showimpacts)
+
+--local rifk7_font = draw.CreateFont("Fixedsys", 25, 200)
+local rifk7_font = draw.CreateFont("Verdana", 20, 700)
+local damage_font = draw.CreateFont("Verdana", 15, 700)
+--local arrow_font = draw.CreateFont("Verdana", 30, 700)
+local arrow_font = draw.CreateFont("Marlett", 45, 700)
+local normal = draw.CreateFont("Arial")
+
+
+--Sky
+
+function SkyBox()
+    if (client.GetConVar("sv_skyname") ~= "sky_descent" and gui.GetValue("msc_restrict") ~= 1) then
+        client.SetConVar("sv_skyname", "sky_descent")    
+    end
+end
+
+callbacks.Register("Draw", "SkyBox", SkyBox)
+
+--Custom Hitmarker
+
+local function Sounds(Event, Entity)
+		if ( Event:GetName() == 'player_hurt' ) then
+		local local_player = client.GetLocalPlayerIndex();
+		local attacker_uid = Event:GetInt('attacker');
+		local attacker_index = client.GetPlayerIndexByUserID(attacker_uid)
+
+		if ( attacker_index == local_player ) then
+	if CustomHitsounds_Combo:GetValue() == 2 then
+		client.Command("play physics\\metal\\paintcan_impact_hard3.wav", true) --clockwork
+		
+	elseif CustomHitsounds_Combo:GetValue() == 1 then
+		client.Command("play buttons\\arena_switch_press_02.wav", true) --skeet
+	end
+end
+end
+end
+
+client.AllowListener('player_hurt');
+
+callbacks.Register('FireGameEvent', 'Hitsound', Sounds);
+
+function DrawingHook()
+
+--Screensize:
+local screenCenterX, screenCenterY = draw.GetScreenSize();
+screenCenterX = screenCenterX / 2;
+screenCenterY = screenCenterY / 2;
+
+--Alpha/Colors:
+local step = 255 / 0.3 * globals.FrameTime()
+local r,b,g = gui.GetValue( "clr_misc_hitmarker" )
+if hurt_time + 0.4 > globals.RealTime() then
+alpha = 255
+else
+alpha = alpha - step
+end
+
+--Render:
+if (alpha > 0) then
+draw.Color( r,g,b,alpha)
+draw.Line( screenCenterX - linesize * 2, screenCenterY - linesize * 2, screenCenterX - ( linesize ), screenCenterY - ( linesize ))
+draw.Line( screenCenterX - linesize * 2, screenCenterY + linesize * 2, screenCenterX - ( linesize ), screenCenterY + ( linesize ))
+draw.Line( screenCenterX + linesize * 2, screenCenterY + linesize * 2, screenCenterX + ( linesize ), screenCenterY + ( linesize ))
+draw.Line( screenCenterX + linesize * 2, screenCenterY - linesize * 2, screenCenterX + ( linesize ), screenCenterY - ( linesize ))
+end
+end
+client.AllowListener( 'player_hurt' );
+callbacks.Register( "Draw", "DrawingHook", DrawingHook );
+callbacks.Register( 'FireGameEvent', 'Hitsound', Sounds ); 
+
+
