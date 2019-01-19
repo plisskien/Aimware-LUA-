@@ -1,4 +1,4 @@
-
+---
 local VA_Pitch, VA_Yaw, VA_Roll;
 local alpha = 0
 local p_local = entities.GetLocalPlayer();
@@ -109,3 +109,4 @@ draw.SetFont(font2)
 end
 
 callbacks.Register('Draw', 'draw_buttons', draw_buttons);
+---
