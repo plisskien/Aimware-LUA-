@@ -1,3 +1,4 @@
+---
 local gui_set = gui.SetValue;
 local gui_get = gui.GetValue;
 local LeftKey = 0;
@@ -136,3 +137,4 @@ callbacks.Register( "Draw", "SetBackWard", SetBackWard);
 callbacks.Register( "Draw", "SetRight", SetRight);
 callbacks.Register( "Draw", "SetAuto", SetAuto);
 callbacks.Register( "Draw", "draw_indicator", draw_indicator);
+---
