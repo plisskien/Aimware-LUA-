@@ -1,4 +1,3 @@
----
 local VA_Pitch, VA_Yaw, VA_Roll;
 local alpha = 0
 local p_local = entities.GetLocalPlayer();
@@ -84,19 +83,13 @@ draw.SetFont(font2)
 		  
 		  draw.SetFont(font3)
 		  
-		   if input.IsButtonDown( 86 ) then
-          draw.Color(0, 255, 0, 255)
-           else
-           draw.Color(150, 150, 150, 0)
-           end
-          draw.Text(905, 850, "Override")
 		  
 		   if input.IsButtonDown( 67 ) then
           draw.Color(0, 255, 0, 255)
            else
            draw.Color(150, 150, 150, 0)
            end
-          draw.Text(895, 850, "Rapid Fire")
+          draw.Text(895, 850, "Fake Duck")
 		  
 		  if input.IsButtonDown( 88 ) then
           draw.Color(0, 255, 0, 255)
@@ -109,4 +102,3 @@ draw.SetFont(font2)
 end
 
 callbacks.Register('Draw', 'draw_buttons', draw_buttons);
----
