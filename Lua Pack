@@ -204,3 +204,957 @@ end
 callbacks.Register( "Draw", "Sniper Crosshair", SniperCrosshair )
 
 
+
+
+
+local xO = 0;   local yO = 0;   local zO = 0;   local fO = 0;   
+local function cache()   xO = client.GetConVar("viewmodel_offset_x");   yO = client.GetConVar("viewmodel_offset_y");   zO = client.GetConVar("viewmodel_offset_z");   fO = client.GetConVar("viewmodel_fov");   end cache()
+local visref = gui.Reference("SETTINGS", "Miscellaneous");  
+local wind = gui.Window("wind", "Viewmodel Extender", 200,200,200,270);
+local gr = gui.Groupbox(wind, "Viewmodel Stuff", 10,10, 180,218)
+local c = gui.Checkbox(visref, "c", "Show Viewmodel Extender", false)
+local xS = gui.Slider(gr, "xS", "X", xO, -20, 20);   
+local yS = gui.Slider(gr, "yS", "Y", yO, -100, 100);   
+local zS = gui.Slider(gr, "zS", "Z", zO, -20, 20);   
+local vfov = gui.Slider(gr, "vfov", "Viewmodel FOV", fO, 0, 120);   
+
+function doesthing()
+if c:GetValue() then wind:SetActive(1); else wind:SetActive(0); end
+client.SetConVar("viewmodel_offset_x", xS:GetValue(), true); 
+client.SetConVar("viewmodel_offset_y", yS:GetValue(), true); 
+client.SetConVar("viewmodel_offset_z", zS:GetValue(), true); 
+client.SetConVar("viewmodel_fov", vfov:GetValue(), true); end
+callbacks.Register("Draw", "sets", doesthing);
+
+
+
+
+
+
+local gui_set = gui.SetValue;
+local gui_get = gui.GetValue;
+local LeftKey = 0;
+local BackKey = 0;
+local RightKey = 0;
+local rage_ref = gui.Reference("RAGE", "MAIN", "Anti-Aim Main");
+local check_indicator = gui.Checkbox( rage_ref, "Enable", "Manual AA", false)
+local AntiAimleft = gui.Keybox(rage_ref, "Anti-Aim_left", "Left Keybind", 0);
+local AntiAimRight = gui.Keybox(rage_ref, "Anti-Aim_Right", "Right Keybind", 0);
+local AntiAimBack = gui.Keybox(rage_ref, "Anti-Aim_Back", "Back Keybind", 0);
+
+local rifk7_font = draw.CreateFont("Verdana", 20, 700)
+local damage_font = draw.CreateFont("Verdana", 15, 700)
+
+local arrow_font = draw.CreateFont("Marlett", 45, 700)
+local normal = draw.CreateFont("Arial")
+
+local function main()
+    if AntiAimleft:GetValue() ~= 0 then
+        if input.IsButtonPressed(AntiAimleft:GetValue()) then
+            LeftKey = LeftKey + 1;
+            BackKey = 0;
+            RightKey = 0;
+        end
+    end
+    if AntiAimBack:GetValue() ~= 0 then
+        if input.IsButtonPressed(AntiAimBack:GetValue()) then
+            BackKey = BackKey + 1;
+            LeftKey = 0;
+            RightKey = 0;
+        end
+    end
+    if AntiAimRight:GetValue() ~= 0 then
+        if input.IsButtonPressed(AntiAimRight:GetValue()) then
+            RightKey = RightKey + 1;
+            LeftKey = 0;
+            BackKey = 0;
+        end
+    end
+end
+
+
+function CountCheck()
+   if ( LeftKey == 1 ) then
+        BackKey = 0;
+        RightKey = 0;
+   elseif ( BackKey == 1 ) then
+        LeftKey = 0;
+        RightKey = 0;
+    elseif ( RightKey == 1 ) then
+        LeftKey = 0;
+        BackKey = 0;
+    elseif ( LeftKey == 2 ) then
+        LeftKey = 0;
+        BackKey = 0;
+        RightKey = 0;
+   elseif ( BackKey == 2 ) then
+        LeftKey = 0;
+        BackKey = 0;
+        RightKey = 0;
+   elseif ( RightKey == 2 ) then
+        LeftKey = 0;
+        BackKey = 0;
+        RightKey = 0;
+   end        
+end
+
+function SetLeft()
+   gui_set("rbot_antiaim_stand_real_add", -90);
+    gui_set("rbot_antiaim_move_real_add", -90);
+    gui_set("rbot_antiaim_autodir", false);
+end
+
+function SetBackWard()
+   gui_set("rbot_antiaim_stand_real_add", 0);
+    gui_set("rbot_antiaim_move_real_add", 0);
+    gui_set("rbot_antiaim_autodir", false);
+end
+
+function SetRight()
+   gui_set("rbot_antiaim_stand_real_add", 90);
+    gui_set("rbot_antiaim_move_real_add", 90);
+    gui_set("rbot_antiaim_autodir", false);
+end
+
+function SetAuto()
+   gui_set("rbot_antiaim_stand_real_add", 0);
+    gui_set("rbot_antiaim_move_real_add", 0);
+    gui_set("rbot_antiaim_autodir", true);
+end
+
+function draw_indicator()
+
+    local active = check_indicator:GetValue()
+
+    if active then
+
+
+        local w, h = draw.GetScreenSize();
+        draw.SetFont(rifk7_font)
+        if (LeftKey == 1) then
+            SetLeft();
+            draw.Color(150, 0, 0, 255);
+            draw.Text(920, h - 1000, "MANUAL");
+			draw.SetFont(arrow_font)
+			draw.Text( w/2 - 100, h/2 - 21, "3");
+			draw.SetFont(rifk7_font)
+        elseif (BackKey == 1) then
+            SetBackWard();
+            draw.Color(150, 0, 0, 255);
+            draw.Text(920, h - 1000, "MANUAL");
+			draw.SetFont(arrow_font)
+			draw.Text( w/2 - 21, h/2 + 60, "6");
+			draw.SetFont(rifk7_font)
+        elseif (RightKey == 1) then
+            SetRight();
+            draw.Color(150, 0, 0, 255);
+            draw.Text(920, h - 1000, "MANUAL");
+			draw.SetFont(arrow_font)
+			draw.Text( w/2 + 60, h/2 - 21, "4");
+			draw.SetFont(rifk7_font)
+        elseif ((LeftKey == 0) and (BackKey == 0) and (RightKey == 0)) then
+            SetAuto();
+            draw.Color(0, 255, 0, 255);
+            draw.Text(935, h - 1000, "AUTO");
+            
+        end
+        draw.SetFont(normal)
+    end
+end
+
+callbacks.Register( "Draw", "main", main);
+callbacks.Register( "Draw", "CountCheck", CountCheck);
+callbacks.Register( "Draw", "SetLeft", SetLeft);
+callbacks.Register( "Draw", "SetBackWard", SetBackWard);
+callbacks.Register( "Draw", "SetRight", SetRight);
+callbacks.Register( "Draw", "SetAuto", SetAuto);
+callbacks.Register( "Draw", "draw_indicator", draw_indicator);
+
+
+
+
+
+
+
+
+
+local font_main = draw.CreateFont("Tahoma Bold", 20, 20)
+local font_main_small = draw.CreateFont("Tahoma Bold", 13, 13)
+
+-- Script --------
+local cur_scriptname = GetScriptName()
+local cur_version = "1.2"
+local git_version = "https://raw.githubusercontent.com/itisluiz/aimware_quickpeek/master/version.txt"
+local git_repository = "https://raw.githubusercontent.com/itisluiz/aimware_quickpeek/master/quickpeek.lua"
+------------------
+
+-- UI Elements --
+local ref_vis_msc_assistance = gui.Reference("VISUALS", "MISC", "Assistance")
+
+local ref_rbot_shared = gui.Reference("RAGE", "WEAPON", "SHARED", "Accuracy")
+local ref_rbot_pistol = gui.Reference("RAGE", "WEAPON", "PISTOL", "Accuracy")
+local ref_rbot_revolver = gui.Reference("RAGE", "WEAPON", "REVOLVER", "Accuracy")
+local ref_rbot_smg = gui.Reference("RAGE", "WEAPON", "SMG", "Accuracy")
+local ref_rbot_rifle = gui.Reference("RAGE", "WEAPON", "RIFLE", "Accuracy")
+local ref_rbot_shotgun = gui.Reference("RAGE", "WEAPON", "SHOTGUN", "Accuracy")
+local ref_rbot_scout = gui.Reference("RAGE", "WEAPON", "SCOUT", "Accuracy")
+local ref_rbot_autosniper = gui.Reference("RAGE", "WEAPON", "A. SNIPER", "Accuracy")
+local ref_rbot_sniper = gui.Reference("RAGE", "WEAPON", "SNIPER", "Accuracy")
+local ref_rbot_lmg = gui.Reference("RAGE", "WEAPON", "LMG", "Accuracy")
+
+local cob_quickpeek_indicator = gui.Combobox(ref_vis_msc_assistance, "msc_quickpeek_indicator", "Quick Peek Indication", "Off", "On World", "On HUD", "On Both")
+local cob_quickpeek_indicator_detail = gui.Combobox(ref_vis_msc_assistance, "msc_quickpeek_indicator", "Quick Peek Indication Style", "Fancy", "Simplified")
+
+local key_shared_quickpeek = gui.Keybox(ref_rbot_shared, "rbot_shared_quickpeek_key", "Quick Peek Key", 0)
+local sl_shared_quickpeek_returnaftershots = gui.Slider(ref_rbot_shared, "rbot_shared_quickpeek_returnaftershots", "Return After X Shots", 1, 1, 15 )
+local chb_shared_quickpeek_knife = gui.Checkbox(ref_rbot_shared, "rbot_shared_quickpeek_knife", "Quick Peek Switch to Knife", 1)
+
+local key_pistol_quickpeek = gui.Keybox(ref_rbot_pistol, "rbot_pistol_quickpeek_key", "Quick Peek Key", 0)
+local sl_pistol_quickpeek_returnaftershots = gui.Slider(ref_rbot_pistol, "rbot_pistol_quickpeek_returnaftershots", "Return After X Shots", 1, 1, 15 )
+local chb_pistol_quickpeek_knife = gui.Checkbox(ref_rbot_pistol, "rbot_pistol_quickpeek_knife", "Quick Peek Switch to Knife", 1)
+
+local key_revolver_quickpeek = gui.Keybox(ref_rbot_revolver, "rbot_revolver_quickpeek_key", "Quick Peek Key", 0)
+local sl_revolver_quickpeek_returnaftershots = gui.Slider(ref_rbot_revolver, "rbot_revolver_quickpeek_returnaftershots", "Return After X Shots", 1, 1, 8 )
+local chb_revolver_quickpeek_knife = gui.Checkbox(ref_rbot_revolver, "rbot_revolver_quickpeek_knife", "Quick Peek Switch to Knife", 1)
+
+local key_smg_quickpeek = gui.Keybox(ref_rbot_smg, "rbot_smg_quickpeek_key", "Quick Peek Key", 0)
+local sl_smg_quickpeek_returnaftershots = gui.Slider(ref_rbot_smg, "rbot_smg_quickpeek_returnaftershots", "Return After X Shots", 1, 1, 15 )
+local chb_smg_quickpeek_knife = gui.Checkbox(ref_rbot_smg, "rbot_smg_quickpeek_knife", "Quick Peek Switch to Knife", 1)
+
+local key_rifle_quickpeek = gui.Keybox(ref_rbot_rifle, "rbot_rifle_quickpeek_key", "Quick Peek Key", 0)
+local sl_rifle_quickpeek_returnaftershots = gui.Slider(ref_rbot_rifle, "rbot_rifle_quickpeek_returnaftershots", "Return After X Shots", 1, 1, 15 )
+local chb_rifle_quickpeek_knife = gui.Checkbox(ref_rbot_rifle, "rbot_rifle_quickpeek_knife", "Quick Peek Switch to Knife", 1)
+
+local key_shotgun_quickpeek = gui.Keybox(ref_rbot_shotgun, "rbot_shotgun_quickpeek_key", "Quick Peek Key", 0)
+local sl_shotgun_quickpeek_returnaftershots = gui.Slider(ref_rbot_shotgun, "rbot_shotgun_quickpeek_returnaftershots", "Return After X Shots", 1, 1, 8 )
+local chb_shotgun_quickpeek_knife = gui.Checkbox(ref_rbot_shotgun, "rbot_shotgun_quickpeek_knife", "Quick Peek Switch to Knife", 1)
+
+local key_scout_quickpeek = gui.Keybox(ref_rbot_scout, "rbot_scout_quickpeek_key", "Quick Peek Key", 0)
+local sl_scout_quickpeek_returnaftershots = gui.Slider(ref_rbot_scout, "rbot_scout_quickpeek_returnaftershots", "Return After X Shots", 1, 1, 10 )
+local chb_scout_quickpeek_knife = gui.Checkbox(ref_rbot_scout, "rbot_scout_quickpeek_knife", "Quick Peek Switch to Knife", 1)
+
+local key_autosniper_quickpeek = gui.Keybox(ref_rbot_autosniper, "rbot_autosniper_quickpeek_key", "Quick Peek Key", 0)
+local sl_autosniper_quickpeek_returnaftershots = gui.Slider(ref_rbot_autosniper, "rbot_autosniper_quickpeek_returnaftershots", "Return After X Shots", 1, 1, 15 )
+local chb_autosniper_quickpeek_knife = gui.Checkbox(ref_rbot_autosniper, "rbot_autosniper_quickpeek_knife", "Quick Peek Switch to Knife", 1)
+
+local key_sniper_quickpeek = gui.Keybox(ref_rbot_sniper, "rbot_sniper_quickpeek_key", "Quick Peek Key", 0)
+local sl_sniper_quickpeek_returnaftershots = gui.Slider(ref_rbot_sniper, "rbot_sniper_quickpeek_returnaftershots", "Return After X Shots", 1, 1, 10 )
+local chb_sniper_quickpeek_knife = gui.Checkbox(ref_rbot_sniper, "rbot_sniper_quickpeek_knife", "Quick Peek Switch to Knife", 1)
+
+local key_lmg_quickpeek = gui.Keybox(ref_rbot_lmg, "rbot_lmg_quickpeek_key", "Quick Peek Key", 0)
+local sl_lmg_quickpeek_returnaftershots = gui.Slider(ref_rbot_lmg, "rbot_lmg_quickpeek_returnaftershots", "Return After X Shots", 1, 1, 10 )
+local chb_lmg_quickpeek_knife = gui.Checkbox(ref_rbot_lmg, "rbot_lmg_quickpeek_knife", "Quick Peek Switch to Knife", 1)
+-----------------
+
+-- Check for updates
+local function git_update()
+	if cur_version ~= http.Get(git_version) then
+		local this_script = file.Open(cur_scriptname, "w")
+		this_script:Write(http.Get(git_repository))
+		this_script:Close()
+		print("[Lua Scripting] " .. cur_scriptname .. " has updated itself from version " .. cur_version .. " to " .. http.Get(git_version))
+		print("[Lua Scripting] Please reload " .. cur_scriptname)
+	else
+		print("[Lua Scripting] " .. cur_scriptname .. " is up-to-date")
+	end
+end
+
+local function drawCircle(Position, Radius)
+
+    for degrees = 1, 360, 1 do
+        local thisPoint = nil;
+        local lastPoint = nil;
+                
+        if Position[3] == nil then
+            thisPoint = {Position[1] + math.sin(math.rad(degrees)) * Radius, Position[2] + math.cos(math.rad(degrees)) * Radius};	
+            lastPoint = {Position[1] + math.sin(math.rad(degrees - 1)) * Radius, Position[2] + math.cos(math.rad(degrees - 1)) * Radius};
+        else
+            thisPoint = {client.WorldToScreen(Position[1] + math.sin(math.rad(degrees)) * Radius, Position[2] + math.cos(math.rad(degrees)) * Radius, Position[3])};
+            lastPoint = {client.WorldToScreen(Position[1] + math.sin(math.rad(degrees - 1)) * Radius, Position[2] + math.cos(math.rad(degrees - 1)) * Radius, Position[3])};
+        end
+                     
+        if thisPoint[1] ~= nil and thisPoint[2] ~= nil and lastPoint[1] ~= nil and lastPoint[2] ~= nil then		
+            draw.Line(thisPoint[1], thisPoint[2], lastPoint[1], lastPoint[2]);		
+        end
+        
+    end
+
+end
+
+local function ActiveWeaponInfo(Entity)
+    
+    local ent_weapon = Entity:GetPropEntity("m_hActiveWeapon")
+
+    if ent_weapon == nil then
+        return nil
+    end
+
+    local str_weapon = ent_weapon:GetName()
+
+    if string.find(str_weapon, "revolver") then
+        return "revolver", 2 
+    end
+    if string.find(str_weapon, "ssg08") then
+        return "scout", 1 
+    end
+    if string.find(str_weapon, "awp") then
+        return "sniper", 1 
+    end
+    if string.find(str_weapon, "scar20") or string.find(str_weapon, "g3sg1") then
+        return "autosniper", 1 
+    end
+
+    local type_weapon = Entity:GetWeaponType()
+
+    if type_weapon == 0 then
+        return nil
+    end
+
+    if type_weapon == 1 then
+        return "pistol", 2
+    end
+    if type_weapon == 2 then
+        return "smg", 1
+    end
+    if type_weapon == 3 then
+        return "rifle", 1
+    end
+    if type_weapon == 4 then
+        return "shotgun", 1
+    end
+	if type_weapon == 6 then
+        return "lmg", 1
+    end
+
+    return nil
+end
+
+-- Global Variables ---
+local msc_peekReturning = false
+local msc_quickPeeking = false
+local msc_peekCompleted = false
+
+local start_ammo = 0
+local cur_ammo = 0
+
+local pos_peekOrigin = {}
+local wpninfo_peek = nil
+local startwpn_peek = nil
+local curwpn_peek = nil
+
+local cacheArray = 
+{
+    {"autostop", 0},
+    {"autostop_key", 0}
+}
+-----------------------
+
+local function ResetPeek()
+    if msc_quickPeeking or msc_peekReturning or msc_peekCompleted then
+        msc_quickPeeking = false
+        msc_peekReturning = false
+        msc_peekCompleted = false
+        cur_ammo = 0
+        start_ammo = 0
+
+        for i = 1, #cacheArray do
+            gui.SetValue("rbot_" .. wpninfo_peek[1] .. "_" .. cacheArray[i][1], cacheArray[i][2])
+        end
+
+        wpninfo_peek = nil
+        startwpn_peek = nil
+    end
+end
+
+local function DrawingCallback()
+   
+    local LocalPlayer = entities.GetLocalPlayer()
+    
+    -- Local player null and alive check
+    if LocalPlayer == nil or not LocalPlayer:IsAlive() then
+        ResetPeek()
+        return
+    end
+
+    local pos_LocalPlayer = {LocalPlayer:GetAbsOrigin()}
+
+    -- If weapon isn't a knife
+    if LocalPlayer:GetWeaponType() ~= 0 then
+        wpninfo_peek = {ActiveWeaponInfo(LocalPlayer)}
+        curwpn_peek = LocalPlayer:GetWeaponID()
+    end
+
+    -- Check if array is null
+    if wpninfo_peek == nil then
+        return
+    end
+
+    -- Check if weapon is null
+    if wpninfo_peek[1] == nil then
+        return
+    end
+
+    -- If shared weapon configuration
+    if gui.GetValue("rbot_sharedweaponcfg") then
+        wpninfo_peek[1] = "shared"
+    end
+
+    -- Round Sliders
+    if gui.GetValue("rbot_" .. wpninfo_peek[1] .. "_quickpeek_returnaftershots") % 1 > 0 then
+        gui.SetValue("rbot_" .. wpninfo_peek[1] .. "_quickpeek_returnaftershots", math.floor(gui.GetValue("rbot_" .. wpninfo_peek[1] .. "_quickpeek_returnaftershots") + 0.5))
+    end
+
+    -- Check if key is set
+    if gui.GetValue("rbot_" .. wpninfo_peek[1] .. "_quickpeek_key") == nil or gui.GetValue("rbot_" .. wpninfo_peek[1] .. "_quickpeek_key") <= 0 then
+        return
+    end
+
+    if input.IsButtonDown(gui.GetValue("rbot_" .. wpninfo_peek[1] .. "_quickpeek_key")) and (startwpn_peek == curwpn_peek or startwpn_peek == nil) and start_ammo >= cur_ammo then
+        if LocalPlayer:GetWeaponType() ~= 0 then
+            cur_ammo = LocalPlayer:GetPropEntity("m_hActiveWeapon"):GetPropInt("m_iClip1")
+        end
+
+        if not msc_quickPeeking and LocalPlayer:GetWeaponType() ~= 0 then      
+            
+            msc_quickPeeking = true
+            startwpn_peek = curwpn_peek  
+            start_ammo = cur_ammo
+            pos_peekOrigin = pos_LocalPlayer
+
+            for i = 1, #cacheArray do
+                cacheArray[i][2] = gui.GetValue("rbot_" .. wpninfo_peek[1] .. "_" .. cacheArray[i][1])
+            end
+
+            gui.SetValue("rbot_" .. wpninfo_peek[1] .. "_" .. cacheArray[1][1], 1)
+            gui.SetValue("rbot_" .. wpninfo_peek[1] .. "_" .. cacheArray[2][1], 0)
+        elseif not msc_quickPeeking and LocalPlayer:GetWeaponType() == 0 then
+            return
+        end
+
+        if msc_peekCompleted then
+            msc_peekCompleted = false
+            start_ammo = cur_ammo
+            
+            if gui.GetValue("rbot_" .. wpninfo_peek[1] .. "_quickpeek_knife") then
+                client.Command("slot" .. wpninfo_peek[2], true)
+            end
+        end
+
+        if cur_ammo + gui.GetValue("rbot_" .. wpninfo_peek[1] .. "_quickpeek_returnaftershots") <= start_ammo and not msc_peekReturning then
+            msc_peekReturning = true
+
+            if gui.GetValue("rbot_" .. wpninfo_peek[1] .. "_quickpeek_knife") then
+                client.Command("slot3", true)
+            end
+        end
+        
+        local world_forward = {vector.Subtract( pos_peekOrigin,  pos_LocalPlayer )}
+        local world_angles = {vector.Angles(world_forward)}
+        
+        local world_linestart = {pos_peekOrigin[1] - 9 * math.cos(math.rad(world_angles[2])), pos_peekOrigin[2] - 9 * math.sin(math.rad(world_angles[2])), pos_peekOrigin[3]}
+        local world_lineend = {pos_LocalPlayer[1] + 5 * math.cos(math.rad(world_angles[2])), pos_LocalPlayer[2] + 5 * math.sin(math.rad(world_angles[2])), pos_LocalPlayer[3]}
+        
+        local wts_peekOrigin = {client.WorldToScreen(pos_peekOrigin[1], pos_peekOrigin[2], pos_peekOrigin[3])}
+        local wts_peekOriginText = {client.WorldToScreen(pos_peekOrigin[1], pos_peekOrigin[2], pos_peekOrigin[3] + 20)}
+        local wts_LocalPlayer = {client.WorldToScreen(pos_LocalPlayer[1], pos_LocalPlayer[2], pos_LocalPlayer[3])}
+
+        local peek_distance = math.floor(vector.Distance(pos_peekOrigin, pos_LocalPlayer) + 0.5)
+        local str_Indicator = "Quick Peeking: " .. peek_distance .. " units"
+        local size_strIndicator
+        
+        if msc_peekReturning then
+            str_Indicator = "Quick Returning: " .. peek_distance .. " units"
+        end
+
+        if (cob_quickpeek_indicator:GetValue() == 1 or cob_quickpeek_indicator:GetValue() == 3) and (wts_peekOrigin[1] ~= nil and wts_peekOriginText[1] ~= nil and wts_LocalPlayer[1] ~= nil) then
+            draw.SetFont(font_main_small)
+            size_strIndicator = {draw.GetTextSize(str_Indicator)}
+            draw.Color(gui.GetValue("clr_gui_window_header_tab2"))
+            if cob_quickpeek_indicator_detail:GetValue() == 0 then
+                drawCircle(pos_peekOrigin, 10)
+                drawCircle(pos_peekOrigin, 8)
+                drawCircle(pos_LocalPlayer, 6)
+                drawCircle(pos_LocalPlayer, 4)
+                draw.Color(255, 255, 255, 255)
+                drawCircle(pos_peekOrigin, 9)
+                drawCircle(pos_LocalPlayer, 5)
+            end
+            draw.Color(255, 255, 255, 255)
+            draw.TextShadow(wts_peekOriginText[1] - size_strIndicator[1] / 2, wts_peekOriginText[2], str_Indicator)
+
+            local wts_linestart = {client.WorldToScreen(world_linestart[1], world_linestart[2], world_linestart[3])}
+            local wts_lineend = {client.WorldToScreen(world_lineend[1], world_lineend[2], world_lineend[3])}
+
+            if msc_peekReturning then
+                draw.Color(gui.GetValue("clr_gui_window_header_tab2"))
+            else
+                draw.Color(255, 255, 255, 255)
+            end
+
+            if wts_linestart[1] ~= nil and wts_lineend[1] ~= nil and peek_distance > 15 then
+                draw.Line(wts_linestart[1], wts_linestart[2], wts_lineend[1], wts_lineend[2])
+            end
+
+        end
+
+        if cob_quickpeek_indicator:GetValue() >= 2 then
+            local width_screen, height_screen = draw.GetScreenSize()
+            draw.SetFont(font_main)
+            size_strIndicator = {draw.GetTextSize(str_Indicator)}
+            
+            if cob_quickpeek_indicator_detail:GetValue() == 0 then
+                draw.Color(0, 0, 0, 125)
+                draw.FilledRect( width_screen / 2  - size_strIndicator[1] / 2, height_screen * 0.95 - size_strIndicator[2] / 2, width_screen / 2 + size_strIndicator[1] / 2, height_screen * 0.95 + size_strIndicator[2] / 2 ) 
+                draw.Color(gui.GetValue("clr_gui_window_header_tab2"))
+                draw.Line(width_screen / 2  - size_strIndicator[1] / 2, height_screen * 0.95 - size_strIndicator[2] / 2, width_screen / 2 + size_strIndicator[1] / 2, height_screen * 0.95 - size_strIndicator[2] / 2)
+            end
+            
+            draw.Color(255, 255, 255, 255)
+            draw.Text(width_screen / 2 - size_strIndicator[1] / 2, height_screen * 0.95 - size_strIndicator[2] / 2, str_Indicator)
+        end
+    
+    else
+        ResetPeek()
+    end
+
+end
+
+local function CreateMoveCallback(UserCmd)
+
+    if msc_peekReturning then
+        local LocalPlayer = entities.GetLocalPlayer()    
+        local ang_LocalPlayer = {UserCmd:GetViewAngles()}
+        local world_forward = {vector.Subtract( pos_peekOrigin,  {LocalPlayer:GetAbsOrigin()} )}
+
+        UserCmd:SetForwardMove( ( (math.sin(math.rad(ang_LocalPlayer[2]) ) * world_forward[2]) + (math.cos(math.rad(ang_LocalPlayer[2]) ) * world_forward[1]) ) * 200 )
+        UserCmd:SetSideMove( ( (math.cos(math.rad(ang_LocalPlayer[2]) ) * -world_forward[2]) + (math.sin(math.rad(ang_LocalPlayer[2]) ) * world_forward[1]) ) * 200 )
+        
+        if vector.Length(world_forward) < 10 then
+            msc_peekReturning = false
+            msc_peekCompleted = true
+        end
+    end
+
+end
+
+if gui.GetValue("lua_allow_http") and gui.GetValue("lua_allow_cfg") then
+	git_update()
+else
+	print("[Lua Scripting] Please enable Lua HTTP and Lua script/config editing to check for updates")
+end
+
+callbacks.Register("Draw", DrawingCallback)
+callbacks.Register("CreateMove", CreateMoveCallback)
+
+local steps = {}
+local last_step = {}
+local GetLocalPlayerIndex = client.GetLocalPlayerIndex()
+local GetLocalPlayer = entities.GetLocalPlayer()
+
+local Visuals_Enemies_Reference = gui.Reference("VISUALS", "ENEMIES", "Filter")
+local SoundESP_Text = gui.Text(Visuals_Enemies_Reference, "")
+local SoundESP_Text2 = gui.Text(Visuals_Enemies_Reference, "Step ESP")
+local Enable_Checkbox = gui.Checkbox(Visuals_Enemies_Reference, "vis_soundesp_enable", "Enable", false)
+local Name_Checkbox = gui.Checkbox(Visuals_Enemies_Reference, "vis_soundesp_name", "Name", false)
+local Size_Slider = gui.Slider(Visuals_Enemies_Reference, "vis_soundesp_size", "Circle Size", 10, 1, 100)
+local Thickness_Slider = gui.Slider(Visuals_Enemies_Reference, "vis_soundesp_thic", "Circle Thickness", 0, 0, 10)
+local Duration_Slider = gui.Slider(Visuals_Enemies_Reference, "vis_soundesp_dur", "Duration", 20, 1, 100)
+local Distance_Slider = gui.Slider(Visuals_Enemies_Reference, "vis_soundesp_dist", "Distance", 100, 1, 1000)
+local R_Slider = gui.Slider(Visuals_Enemies_Reference, "vis_soundesp_red", "Red", 160, 0, 255)
+local G_Slider = gui.Slider(Visuals_Enemies_Reference, "vis_soundesp_green", "Green", 160, 0, 255)
+local B_Slider = gui.Slider(Visuals_Enemies_Reference, "vis_soundesp_blue", "Blue", 160, 0, 255)
+local A_Slider = gui.Slider(Visuals_Enemies_Reference, "vis_soundesp_alpha", "Alpha", 255, 0, 255)
+
+local function drawCircle(x, y, z, radius, thickness, quality, r, g, b, a)
+    local quality = quality or 20
+    local thickness = thickness or  8
+    local Screen_X_Line_Old, Screen_Y_Line_Old
+    for rot=0, 360, quality do
+        local rot_temp = math.rad(rot)
+        local LineX, LineY, LineZ = radius * math.cos(rot_temp) + x, radius * math.sin(rot_temp) + y, z
+        local Screen_X_Line, Screen_Y_Line = client.WorldToScreen(LineX, LineY, LineZ)
+        if Screen_X_Line ~=nil and Screen_X_Line_Old ~= nil then
+            draw.Color(r, g, b, a)
+            draw.Line(Screen_X_Line, Screen_Y_Line, Screen_X_Line_Old, Screen_Y_Line_Old)
+                for i = 0, thickness do
+                    draw.Line(Screen_X_Line, Screen_Y_Line+i, Screen_X_Line_Old, Screen_Y_Line_Old+i)
+                end
+        end
+        Screen_X_Line_Old, Screen_Y_Line_Old = Screen_X_Line, Screen_Y_Line
+    end
+end
+
+local function distance(x1, y1, z1, x2, y2, z2)
+    return math.sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) + (z2-z1)*(z2-z1))
+end
+
+local function isEnemy(player)
+    return player:GetTeamNumber() ~= entities.GetLocalPlayer():GetTeamNumber()
+end
+
+function ResetTables(event)
+    if Enable_Checkbox:GetValue() then    
+        if ( event:GetName( ) ~= 'round_start' ) then
+            return
+        end
+        steps = {}
+        last_step = {}
+    end
+end
+client.AllowListener( 'round_start' )
+callbacks.Register( 'FireGameEvent', 'Reset Tables', ResetTables )
+
+local function getPlayers()
+    local plys = entities.FindByClass( "CCSPlayer" )
+
+    for i = 1, #plys do
+        local plyer = plys[ i ]
+        return plyer
+    end
+end    
+
+local function onStep(player)    
+    local curtime = globals.CurTime()
+    local local_x, local_y, local_z = entities.GetLocalPlayer():GetAbsOrigin()
+    local max_distance = Distance_Slider:GetValue()*10
+    local x, y, z = player:GetAbsOrigin()
+    
+    if ((player:GetIndex() ~= GetLocalPlayerIndex ) and isEnemy(player)) then
+        if x ~= nil and local_x ~= nil then
+            if max_distance > distance(local_x, local_y, local_z, x, y, z) then
+                table.insert(steps, {curtime, x, y, z, player})
+            end
+        else
+        end
+    end
+end
+
+function onStepEvent( event )
+    if Enable_Checkbox:GetValue() then
+        if ( entities.GetLocalPlayer() ~= nil ) then
+        if ( event:GetName( ) ~= 'player_footstep' ) then
+            return
+        end
+
+        local uId = event:GetInt( 'userid' )
+        local ply = entities.GetByUserID( uId )
+        
+        if ( ply ~= nil ) then
+            local playerName = ply:GetName()
+            onStep(ply)
+        end
+        end
+    end
+end
+client.AllowListener( 'player_footstep' )
+callbacks.Register( 'FireGameEvent', 'onStep Event', onStepEvent )
+
+local function onDrawStep()
+    if Enable_Checkbox:GetValue() then
+        if #steps > 0 then
+            local curtime = globals.CurTime()
+            local r, g, b, a = math.floor(R_Slider:GetValue()), math.floor(G_Slider:GetValue()), math.floor(B_Slider:GetValue()), math.floor(A_Slider:GetValue())
+            local duration = Duration_Slider:GetValue()*0.1
+            local steps_new = {}
+            
+            for i=1, #steps do
+                local step = steps[i]
+
+                if step[1] + duration > curtime then
+                    local time_since_step = curtime - step[1]
+                    local opacity_multiplier = 1
+                    local size_multiplier = ((time_since_step) / duration)
+                    if duration-time_since_step < duration then
+                        opacity_multiplier = (duration - time_since_step) / duration
+                    end
+                    opacity_multiplier = math.min(opacity_multiplier, 1)
+                    opacity_multiplier = math.max(opacity_multiplier, 0)
+
+                    local wx, wy = client.WorldToScreen(step[2], step[3], step[4])
+                    local tx, ty = client.WorldToScreen(step[2], step[3], step[4])
+
+                    if wx ~= nil then
+                        local size = 120
+                        local width = 20
+                        width = width + (1-size_multiplier)*2    
+                        if ( entities.GetLocalPlayer() ~= nil ) then
+                            drawCircle(step[2], step[3], step[4], size_multiplier*Size_Slider:GetValue(), math.floor(Thickness_Slider:GetValue()), 15, r, g, b, a*opacity_multiplier)
+                        end
+                        if Name_Checkbox:GetValue() then
+                            local text_size = draw.GetTextSize()
+                            local pName = (step[5]:GetName())
+                            draw.Text(tx-Size_Slider:GetValue(), ty, pName)
+                        end
+                    end
+                    table.insert(steps_new, step)
+                end
+            end
+            steps = steps_new
+        end
+    end
+end
+callbacks.Register( "Draw", "Draw Step ESP", onDrawStep)
+
+
+
+
+local function distance3d(x1, y1, z1, x2, y2, z2)
+   return math.sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) + (z2-z1)*(z2-z1))
+end
+
+
+
+local msc_p2 = gui.Reference("MISC", "AUTOMATION", "Other")
+local GroupBox = gui.Groupbox( msc_p2, "Zeus Range", 0, 75, 213, 150 );
+local ActiveCheckBox = gui.Checkbox(GroupBox, "Active", "Activate", false)
+local Tyleline = gui.Combobox( GroupBox, 'Type_line',"Type line", "Single line","Multi line")
+local colortype = gui.Combobox( GroupBox, 'Type_color',"Color", "Single color","Multi color")
+local function lerp_pos(x1, y1, z1, x2, y2, z2, percentage)
+   local x = (x2 - x1) * percentage + x1
+   local y = (y2 - y1) * percentage + y1
+   local z = (z2 - z1) * percentage + z1
+   return x, y, z
+end
+
+local function trace_line_skip_teammates( x1, y1, z1, x2, y2, z2, max_traces)
+
+   local max_traces = max_traces or 10
+   local fraction, entindex_hit = 0, -1
+   local x_hit, y_hit, z_hit = x1, y1, z1
+
+   local i=1
+   while (entindex_hit == -1 ) and 1 > fraction and max_traces >= i do
+   fraction, entindex_hit = engine.TraceLine( x_hit, y_hit, z_hit, x2, y2, z2,3)
+
+       x_hit, y_hit, z_hit = lerp_pos(x_hit, y_hit, z_hit, x2, y2, z2, 1)
+
+       i = i + 1
+   end
+
+   local traveled_total = distance3d(x1, y1, z1, x_hit, y_hit, z_hit)
+   local total_distance = distance3d(x1, y1, z1, x2, y2, z2)
+
+   return traveled_total/total_distance, entindex_hit
+end
+
+local function hsv_to_rgb(h, s, v, a)
+ local r, g, b
+
+ local i = math.floor(h * 6);
+ local f = h * 6 - i;
+ local p = v * (1 - s);
+ local q = v * (1 - f * s);
+ local t = v * (1 - (1 - f) * s);
+
+ i = i % 6
+
+ if i == 0 then r, g, b = v, t, p
+ elseif i == 1 then r, g, b = q, v, p
+ elseif i == 2 then r, g, b = p, v, t
+ elseif i == 3 then r, g, b = p, q, v
+ elseif i == 4 then r, g, b = t, p, v
+ elseif i == 5 then r, g, b = v, p, q
+ end
+
+ return r * 255, g * 255, b * 255, a * 255
+end
+
+
+
+
+local weapon_name_prev = nil
+local last_switch = 0
+local accuracy = 2.5
+
+local is_taser;
+local is_knife;
+local function on_item_equip(Event)
+
+   if (Event:GetName() ~= 'item_equip') then
+       return;
+   end
+
+   local local_player, userid, item, weptype = client.GetLocalPlayerIndex(), Event:GetInt('userid'), Event:GetString('item'), Event:GetInt('weptype');
+
+
+   if (local_player == client.GetPlayerIndexByUserID(userid)) then
+       if (item == "taser" ) then
+          is_taser=true;
+          is_knife=false;
+       elseif (item=="knife")then
+       is_knife=true;
+        is_taser=false;
+       else 
+       is_knife=false;
+           is_taser=false;
+       end
+   end
+end
+
+
+client.AllowListener('item_equip');
+callbacks.Register("FireGameEvent", "on_item_equip", on_item_equip);
+
+
+local function on_paint()
+
+if ActiveCheckBox:GetValue() then
+   local local_player = entities.GetLocalPlayer();
+   local curtime = globals.CurTime()
+
+
+
+   local ranges
+   local ranges_opacities
+   if  is_taser then
+       ranges = {167}
+       ranges_opacities = {1}
+elseif is_knife then
+       ranges = {32}
+       ranges_opacities = {1}
+   end
+
+   if ranges == nil then
+       return
+   end
+    local Entity = entities.GetLocalPlayer();
+     local Alive = Entity:IsAlive();
+     if (Alive ~=true) then
+     return
+     
+     end
+   local local_x, local_y, local_z = Entity:GetAbsOrigin()
+   local_z=local_z+45
+   local vo_z = Entity:GetProp("localdata", "m_vecViewOffset[2]")-40
+local range
+local range2 
+fade_multiplier = 1
+if (Tyleline:GetValue() ==0) then
+   for i=1, #ranges do
+       range2=  ranges[i]
+       range = ranges[i]
+       
+       local opacity_multiplier = ranges_opacities[i] * fade_multiplier
+
+       local previous_world_x, previous_world_y
+
+       for rot=0, 360, accuracy do
+           local rot_temp = math.rad(rot)
+           local temp_x, temp_y, temp_z = local_x + range * math.cos(rot_temp), local_y + range * math.sin(rot_temp), local_z
+       
+           local fraction, entindex_hit = trace_line_skip_teammates( local_x, local_y, local_z, temp_x, temp_y, temp_z)
+
+           --local fraction_x, fraction_y = local_x+(temp_x-local_x)*fraction, local_y+(temp_y-local_y)*fraction
+           local fraction_x, fraction_y = lerp_pos(local_x, local_y, local_z, temp_x, temp_y, temp_z, fraction)
+           local world_x, world_y = client.WorldToScreen( fraction_x, fraction_y, temp_z+(range2-range))
+
+           local hue_extra = globals.RealTime() % 8 / 8
+           local r, g, b = hsv_to_rgb(rot/360+hue_extra, 1, 1, 255)
+
+           local fraction_multiplier = 1
+           if fraction > 0.9 then
+               fraction_multiplier = 0.6
+           end
+
+           if world_x ~= nil and previous_world_x ~= nil then
+           if colortype:GetValue()==1 then
+           draw.Color( r, g, b, 255*opacity_multiplier*fraction_multiplier)
+           end
+               draw.Line( world_x, world_y, previous_world_x, previous_world_y )
+           
+                        
+           end
+           previous_world_x, previous_world_y = world_x, world_y
+       end
+   end
+else 
+   for i=1, #ranges do
+       range2=  ranges[i]
+       range = ranges[i]
+       end
+       
+   while range >5 do
+   for i=1, #ranges do
+   
+       
+       local opacity_multiplier = ranges_opacities[i] * fade_multiplier
+
+       local previous_world_x, previous_world_y
+
+       for rot=0, 360, accuracy do
+           local rot_temp = math.rad(rot)
+           local temp_x, temp_y, temp_z = local_x + range * math.cos(rot_temp), local_y + range * math.sin(rot_temp), local_z
+       
+           local fraction, entindex_hit = trace_line_skip_teammates( local_x, local_y, local_z, temp_x, temp_y, temp_z)
+
+           --local fraction_x, fraction_y = local_x+(temp_x-local_x)*fraction, local_y+(temp_y-local_y)*fraction
+           local fraction_x, fraction_y = lerp_pos(local_x, local_y, local_z, temp_x, temp_y, temp_z, fraction)
+           local world_x, world_y = client.WorldToScreen( fraction_x, fraction_y, temp_z+(range2-range))
+
+           local hue_extra = globals.RealTime() % 8 / 8
+           local r, g, b = hsv_to_rgb(rot/360+hue_extra, 1, 1, 255)
+
+           local fraction_multiplier = 1
+           if fraction > 0.9 then
+               fraction_multiplier = 0.6
+           end
+
+           if world_x ~= nil and previous_world_x ~= nil then
+                   if colortype:GetValue()==1 then
+           draw.Color( r, g, b, 255*opacity_multiplier*fraction_multiplier)
+           end
+               draw.Line( world_x, world_y, previous_world_x, previous_world_y )
+           
+                        
+           end
+           previous_world_x, previous_world_y = world_x, world_y
+       end
+   end
+       for i=1, #ranges do
+   
+   
+       local opacity_multiplier = ranges_opacities[i] * fade_multiplier
+
+       local previous_world_x, previous_world_y
+
+       for rot=0, 360, accuracy do
+           local rot_temp = math.rad(rot)
+           local temp_x, temp_y, temp_z = local_x + range * math.cos(rot_temp), local_y + range * math.sin(rot_temp), local_z
+       
+           local fraction, entindex_hit = trace_line_skip_teammates( local_x, local_y, local_z, temp_x, temp_y, temp_z)
+
+           --local fraction_x, fraction_y = local_x+(temp_x-local_x)*fraction, local_y+(temp_y-local_y)*fraction
+           local fraction_x, fraction_y = lerp_pos(local_x, local_y, local_z, temp_x, temp_y, temp_z, fraction)
+           local world_x, world_y = client.WorldToScreen( fraction_x, fraction_y, temp_z+(range-range2))
+
+           local hue_extra = globals.RealTime() % 8 / 8
+           local r, g, b = hsv_to_rgb(rot/360+hue_extra, 1, 1, 255)
+
+           local fraction_multiplier = 1
+           if fraction > 0.9 then
+               fraction_multiplier = 0.6
+           end
+
+           if world_x ~= nil and previous_world_x ~= nil then
+                   if colortype:GetValue()==1 then
+           draw.Color( r, g, b, 255*opacity_multiplier*fraction_multiplier)
+           end
+               draw.Line( world_x, world_y, previous_world_x, previous_world_y )
+           
+                        
+           end
+           previous_world_x, previous_world_y = world_x, world_y
+       end
+   end
+   range =range-10
+   end
+
+   
+
+   end
+end
+end
+
+
+
+callbacks.Register( "Draw", "on_paint", on_paint);
