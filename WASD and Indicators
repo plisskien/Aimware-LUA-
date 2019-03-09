@@ -1,8 +1,9 @@
+
+--WASD,Indicartors
+
 local VA_Pitch, VA_Yaw, VA_Roll;
 local alpha = 0
 local p_local = entities.GetLocalPlayer();
-
-
 
 function UCMD_GetAngles( UCMD )
    VA_Pitch, VA_Yaw, VA_Roll = UCMD:GetViewAngles();
@@ -20,26 +21,17 @@ end
 
 callbacks.Register( 'CreateMove', 'GetAngles', UCMD_GetAngles );
 
-
 function draw_buttons()
 if entities.GetLocalPlayer() == nil then
      return
 end
-
-local vx = p_local:GetPropFloat( "localdata", "m_vecVelocity[0]" );
-local vy = p_local:GetPropFloat( "localdata", "m_vecVelocity[1]" );
-local speed = math.floor(math.min(10000, math.sqrt(vx*vx + vy*vy) + 0.5))
 
 local x, y = draw.GetScreenSize()
 
 local font1 = draw.CreateFont('RawengulkSank', 43)
 local font2 = draw.CreateFont('RawengulkSank', 15)
 local font3 = draw.CreateFont('Verdana', 30, 700)
-
-draw.SetFont(font2)
-
          
-                   
            draw.SetFont(font1)
 
           if input.IsButtonDown( 87 ) then
@@ -83,7 +75,6 @@ draw.SetFont(font2)
 		  
 		  draw.SetFont(font3)
 		  
-		  
 		   if input.IsButtonDown( 67 ) then
           draw.Color(0, 255, 0, 255)
            else
@@ -97,8 +88,33 @@ draw.SetFont(font2)
            draw.Color(150, 150, 150, 0)
            end
           draw.Text(895, 850, "Slow Walk")
-           
+
+          if input.IsButtonDown( 16 ) then
+          draw.Color(128, 0, 0, 255)
+           else
+          draw.Color(150, 150, 150, 255)
+           end
+          draw.Text(830, 824, "Shift")
 
 end
-
+    
 callbacks.Register('Draw', 'draw_buttons', draw_buttons);
+
+--LBY
+
+function draw_lby()
+    local local_player = entities.GetLocalPlayer();
+    local lowerbody = local_player:GetProp('m_flLowerBodyYawTarget');
+  if (lowerbody >= 30)  then
+        r,g,b = 0,255,0
+  else
+        r,g,b = 255,0,0
+  end
+  
+    draw.Color( r, g, b, 255 )
+    draw.Text( 5, 1000, "LBY" )
+end
+callbacks.Register('Draw', 'draw_lby', draw_lby)
+
+
+
