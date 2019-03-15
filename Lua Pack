@@ -1,3 +1,5 @@
+--Hitbox Hit Draw
+
 local UI_REF = gui.Reference( "VISUALS", "ENEMIES", "Options" );
 
 local DrawHitboxHitText = gui.Text( UI_REF, "Draw Hitbox Hit");
@@ -108,7 +110,7 @@ callbacks.Register("FireGameEvent", "HS_SOUND", on_player_death);
 
 
 
-
+--Disablepostprocessing
 
 local VIS_MAIN_REF = gui.Reference( "MISC", "GENERAL", "Extra" );
 
@@ -128,38 +130,7 @@ callbacks.Register( "Draw", "Disable Post Processing", PostProcessing )
 
 
 
-
-
-
-local cb = gui.Checkbox(gui.Reference("RAGE", "WEAPON", "REVOLVER", "Accuracy"), "rbot_revolver_autocock_ex", "Fixed Auto-Revolver", false)
-
-local cnt = 0
-local function on_create_move(cmd)
-    local me = entities.GetLocalPlayer()
-    if cb:GetValue() and me ~= nil then
-        local wep = me:GetPropEntity("m_hActiveWeapon")
-
-        if wep ~= nil and wep:GetWeaponID() == 64 then
-            cnt = cnt + 1
-            if cnt <= 15 then
-                cmd:SetButtons(cmd:GetButtons() | (1 << 0))
-            else
-                cnt = 0
-                
-                local m_flPostponeFireReadyTime = wep:GetPropFloat("m_flPostponeFireReadyTime")
-                if m_flPostponeFireReadyTime > 0 and m_flPostponeFireReadyTime < globals.CurTime() then
-                    cmd:SetButtons(cmd:GetButtons() & ~(1 << 0))
-                end
-            end
-        end
-    end
-end
-
-callbacks.Register("CreateMove", on_create_move)
-
-
-
-
+--Sniper Crosshair
 
 local VIS_MAIN_REF = gui.Reference( "VISUALS", "Shared" );
 
@@ -205,7 +176,7 @@ callbacks.Register( "Draw", "Sniper Crosshair", SniperCrosshair )
 
 
 
-
+--Viewmodel changer 
 
 local xO = 0;   local yO = 0;   local zO = 0;   local fO = 0;   
 local function cache()   xO = client.GetConVar("viewmodel_offset_x");   yO = client.GetConVar("viewmodel_offset_y");   zO = client.GetConVar("viewmodel_offset_z");   fO = client.GetConVar("viewmodel_fov");   end cache()
@@ -228,165 +199,15 @@ callbacks.Register("Draw", "sets", doesthing);
 
 
 
-
-
-
-local gui_set = gui.SetValue;
-local gui_get = gui.GetValue;
-local LeftKey = 0;
-local BackKey = 0;
-local RightKey = 0;
-local rage_ref = gui.Reference("RAGE", "MAIN", "Anti-Aim Main");
-local check_indicator = gui.Checkbox( rage_ref, "Enable", "Manual AA", false)
-local AntiAimleft = gui.Keybox(rage_ref, "Anti-Aim_left", "Left Keybind", 0);
-local AntiAimRight = gui.Keybox(rage_ref, "Anti-Aim_Right", "Right Keybind", 0);
-local AntiAimBack = gui.Keybox(rage_ref, "Anti-Aim_Back", "Back Keybind", 0);
-
-local rifk7_font = draw.CreateFont("Verdana", 20, 700)
-local damage_font = draw.CreateFont("Verdana", 15, 700)
-
-local arrow_font = draw.CreateFont("Marlett", 45, 700)
-local normal = draw.CreateFont("Arial")
-
-local function main()
-    if AntiAimleft:GetValue() ~= 0 then
-        if input.IsButtonPressed(AntiAimleft:GetValue()) then
-            LeftKey = LeftKey + 1;
-            BackKey = 0;
-            RightKey = 0;
-        end
-    end
-    if AntiAimBack:GetValue() ~= 0 then
-        if input.IsButtonPressed(AntiAimBack:GetValue()) then
-            BackKey = BackKey + 1;
-            LeftKey = 0;
-            RightKey = 0;
-        end
-    end
-    if AntiAimRight:GetValue() ~= 0 then
-        if input.IsButtonPressed(AntiAimRight:GetValue()) then
-            RightKey = RightKey + 1;
-            LeftKey = 0;
-            BackKey = 0;
-        end
-    end
-end
-
-
-function CountCheck()
-   if ( LeftKey == 1 ) then
-        BackKey = 0;
-        RightKey = 0;
-   elseif ( BackKey == 1 ) then
-        LeftKey = 0;
-        RightKey = 0;
-    elseif ( RightKey == 1 ) then
-        LeftKey = 0;
-        BackKey = 0;
-    elseif ( LeftKey == 2 ) then
-        LeftKey = 0;
-        BackKey = 0;
-        RightKey = 0;
-   elseif ( BackKey == 2 ) then
-        LeftKey = 0;
-        BackKey = 0;
-        RightKey = 0;
-   elseif ( RightKey == 2 ) then
-        LeftKey = 0;
-        BackKey = 0;
-        RightKey = 0;
-   end        
-end
-
-function SetLeft()
-   gui_set("rbot_antiaim_stand_real_add", -90);
-    gui_set("rbot_antiaim_move_real_add", -90);
-    gui_set("rbot_antiaim_autodir", false);
-end
-
-function SetBackWard()
-   gui_set("rbot_antiaim_stand_real_add", 0);
-    gui_set("rbot_antiaim_move_real_add", 0);
-    gui_set("rbot_antiaim_autodir", false);
-end
-
-function SetRight()
-   gui_set("rbot_antiaim_stand_real_add", 90);
-    gui_set("rbot_antiaim_move_real_add", 90);
-    gui_set("rbot_antiaim_autodir", false);
-end
-
-function SetAuto()
-   gui_set("rbot_antiaim_stand_real_add", 0);
-    gui_set("rbot_antiaim_move_real_add", 0);
-    gui_set("rbot_antiaim_autodir", true);
-end
-
-function draw_indicator()
-
-    local active = check_indicator:GetValue()
-
-    if active then
-
-
-        local w, h = draw.GetScreenSize();
-        draw.SetFont(rifk7_font)
-        if (LeftKey == 1) then
-            SetLeft();
-            draw.Color(150, 0, 0, 255);
-            draw.Text(920, h - 1000, "MANUAL");
-			draw.SetFont(arrow_font)
-			draw.Text( w/2 - 100, h/2 - 21, "3");
-			draw.SetFont(rifk7_font)
-        elseif (BackKey == 1) then
-            SetBackWard();
-            draw.Color(150, 0, 0, 255);
-            draw.Text(920, h - 1000, "MANUAL");
-			draw.SetFont(arrow_font)
-			draw.Text( w/2 - 21, h/2 + 60, "6");
-			draw.SetFont(rifk7_font)
-        elseif (RightKey == 1) then
-            SetRight();
-            draw.Color(150, 0, 0, 255);
-            draw.Text(920, h - 1000, "MANUAL");
-			draw.SetFont(arrow_font)
-			draw.Text( w/2 + 60, h/2 - 21, "4");
-			draw.SetFont(rifk7_font)
-        elseif ((LeftKey == 0) and (BackKey == 0) and (RightKey == 0)) then
-            SetAuto();
-            draw.Color(0, 255, 0, 255);
-            draw.Text(935, h - 1000, "AUTO");
-            
-        end
-        draw.SetFont(normal)
-    end
-end
-
-callbacks.Register( "Draw", "main", main);
-callbacks.Register( "Draw", "CountCheck", CountCheck);
-callbacks.Register( "Draw", "SetLeft", SetLeft);
-callbacks.Register( "Draw", "SetBackWard", SetBackWard);
-callbacks.Register( "Draw", "SetRight", SetRight);
-callbacks.Register( "Draw", "SetAuto", SetAuto);
-callbacks.Register( "Draw", "draw_indicator", draw_indicator);
-
-
-
-
-
-
-
-
+--Quickpeek
 
 local font_main = draw.CreateFont("Tahoma Bold", 20, 20)
 local font_main_small = draw.CreateFont("Tahoma Bold", 13, 13)
-
--- Script --------
+-- Script 
 local cur_scriptname = GetScriptName()
 local cur_version = "1.2"
 local git_version = "https://raw.githubusercontent.com/itisluiz/aimware_quickpeek/master/version.txt"
 local git_repository = "https://raw.githubusercontent.com/itisluiz/aimware_quickpeek/master/quickpeek.lua"
-------------------
 
 -- UI Elements --
 local ref_vis_msc_assistance = gui.Reference("VISUALS", "MISC", "Assistance")
@@ -444,7 +265,7 @@ local chb_sniper_quickpeek_knife = gui.Checkbox(ref_rbot_sniper, "rbot_sniper_qu
 local key_lmg_quickpeek = gui.Keybox(ref_rbot_lmg, "rbot_lmg_quickpeek_key", "Quick Peek Key", 0)
 local sl_lmg_quickpeek_returnaftershots = gui.Slider(ref_rbot_lmg, "rbot_lmg_quickpeek_returnaftershots", "Return After X Shots", 1, 1, 10 )
 local chb_lmg_quickpeek_knife = gui.Checkbox(ref_rbot_lmg, "rbot_lmg_quickpeek_knife", "Quick Peek Switch to Knife", 1)
------------------
+
 
 -- Check for updates
 local function git_update()
@@ -746,415 +567,408 @@ end
 callbacks.Register("Draw", DrawingCallback)
 callbacks.Register("CreateMove", CreateMoveCallback)
 
-local steps = {}
-local last_step = {}
-local GetLocalPlayerIndex = client.GetLocalPlayerIndex()
-local GetLocalPlayer = entities.GetLocalPlayer()
 
-local Visuals_Enemies_Reference = gui.Reference("VISUALS", "ENEMIES", "Filter")
-local SoundESP_Text = gui.Text(Visuals_Enemies_Reference, "")
-local SoundESP_Text2 = gui.Text(Visuals_Enemies_Reference, "Step ESP")
-local Enable_Checkbox = gui.Checkbox(Visuals_Enemies_Reference, "vis_soundesp_enable", "Enable", false)
-local Name_Checkbox = gui.Checkbox(Visuals_Enemies_Reference, "vis_soundesp_name", "Name", false)
-local Size_Slider = gui.Slider(Visuals_Enemies_Reference, "vis_soundesp_size", "Circle Size", 10, 1, 100)
-local Thickness_Slider = gui.Slider(Visuals_Enemies_Reference, "vis_soundesp_thic", "Circle Thickness", 0, 0, 10)
-local Duration_Slider = gui.Slider(Visuals_Enemies_Reference, "vis_soundesp_dur", "Duration", 20, 1, 100)
-local Distance_Slider = gui.Slider(Visuals_Enemies_Reference, "vis_soundesp_dist", "Distance", 100, 1, 1000)
-local R_Slider = gui.Slider(Visuals_Enemies_Reference, "vis_soundesp_red", "Red", 160, 0, 255)
-local G_Slider = gui.Slider(Visuals_Enemies_Reference, "vis_soundesp_green", "Green", 160, 0, 255)
-local B_Slider = gui.Slider(Visuals_Enemies_Reference, "vis_soundesp_blue", "Blue", 160, 0, 255)
-local A_Slider = gui.Slider(Visuals_Enemies_Reference, "vis_soundesp_alpha", "Alpha", 255, 0, 255)
 
-local function drawCircle(x, y, z, radius, thickness, quality, r, g, b, a)
-    local quality = quality or 20
-    local thickness = thickness or  8
-    local Screen_X_Line_Old, Screen_Y_Line_Old
-    for rot=0, 360, quality do
-        local rot_temp = math.rad(rot)
-        local LineX, LineY, LineZ = radius * math.cos(rot_temp) + x, radius * math.sin(rot_temp) + y, z
-        local Screen_X_Line, Screen_Y_Line = client.WorldToScreen(LineX, LineY, LineZ)
-        if Screen_X_Line ~=nil and Screen_X_Line_Old ~= nil then
-            draw.Color(r, g, b, a)
-            draw.Line(Screen_X_Line, Screen_Y_Line, Screen_X_Line_Old, Screen_Y_Line_Old)
-                for i = 0, thickness do
-                    draw.Line(Screen_X_Line, Screen_Y_Line+i, Screen_X_Line_Old, Screen_Y_Line_Old+i)
-                end
-        end
-        Screen_X_Line_Old, Screen_Y_Line_Old = Screen_X_Line, Screen_Y_Line
-    end
+-- Grenade timers by Nyanpasu! (- Luiz)
+
+local updatetick = 0;
+local grenades = {};
+
+function EventHook(Event)
+-- Clean table on round start
+if Event:GetName() == "round_start" then
+grenades = {};
+end
+-- Remove expired grenades from Table
+if Event:GetName() == "hegrenade_detonate" or Event:GetName() == "flashbang_detonate" 
+or Event:GetName() == "inferno_expire" or Event:GetName() == "inferno_extinguish" then 
+updatetick = globals.TickCount(); 
+for index,value in pairs(grenades) do 
+if value[1] == Event:GetInt("entityid") then
+table.remove(grenades, index);
+end
+end 
+end
 end
 
-local function distance(x1, y1, z1, x2, y2, z2)
-    return math.sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) + (z2-z1)*(z2-z1))
+function ESPHook(Builder)
+-- Smoke Grenades
+if Builder:GetEntity():GetClass() == "CSmokeGrenadeProjectile" 
+and Builder:GetEntity():GetProp("m_nSmokeEffectTickBegin") ~= 0 then
+delta = (globals.TickCount() - Builder:GetEntity():GetProp("m_nSmokeEffectTickBegin")) * globals.TickInterval();
+Builder:AddBarBottom( 1 - (delta/17.5) )
+-- Flash and HE Grenades
+elseif Builder:GetEntity():GetClass() == "CBaseCSGrenadeProjectile" then
+local found = false;
+for index,value in pairs(grenades) do
+if value[1] == Builder:GetEntity():GetIndex() then
+DeltaT = (globals.TickCount() - grenades[index][2]) * globals.TickInterval();
+Builder:AddBarBottom( 1 - (DeltaT/1.65) )
+found = true;
+break;
+end
+end
+if found == false and globals.TickCount() > updatetick then
+local gMatrix = {Builder:GetEntity():GetIndex(), globals.TickCount()};
+table.insert(grenades, gMatrix);
+end
+end
 end
 
-local function isEnemy(player)
-    return player:GetTeamNumber() ~= entities.GetLocalPlayer():GetTeamNumber()
+function DrawingHook() 
+for indexF,valueF in pairs(entities.FindByClass("CInferno")) do
+local found = false;
+for indexT,valueT in pairs(grenades) do
+if valueT[1] == valueF:GetIndex() then
+x, y = client.WorldToScreen( valueF:GetAbsOrigin() )
+local mollysize = 25;
+if x ~= nil and y ~= nil then
+draw.Color(0, 0, 0, 255);
+draw.RoundedRectFill( x - mollysize, y, x + mollysize, y + 4 );
+draw.Color(227, 227, 227, 255);
+local math = (((globals.TickCount() - valueT[2]) * ((-1) - 1))
+/ ( (valueT[2] + 7 / globals.TickInterval()) - valueT[2])) + 1
+draw.RoundedRectFill( x - mollysize, y, x + mollysize * math, y + 4 )
+draw.Color(255, 255, 255, 255);
+draw.RoundedRect( x - mollysize, y, x + mollysize, y + 4) 
+local w,h = draw.GetTextSize( "MOLLY" ) 
+draw.Text(x - w/2, y - h * 1.25 , "MOLLY");
+draw.TextShadow(x - w/2, y - h * 1.25 , "MOLLY");
+end 
+found = true;
+break;
+end
 end
 
-function ResetTables(event)
-    if Enable_Checkbox:GetValue() then    
-        if ( event:GetName( ) ~= 'round_start' ) then
-            return
-        end
-        steps = {}
-        last_step = {}
-    end
+if found == false and globals.TickCount() > updatetick then
+local gMatrix = {valueF:GetIndex(), globals.TickCount()};
+table.insert(grenades, gMatrix);
 end
-client.AllowListener( 'round_start' )
-callbacks.Register( 'FireGameEvent', 'Reset Tables', ResetTables )
+end
+end
 
-local function getPlayers()
-    local plys = entities.FindByClass( "CCSPlayer" )
+-- Grenade timers by Nyanpasu! (- Luiz)
 
-    for i = 1, #plys do
-        local plyer = plys[ i ]
-        return plyer
-    end
-end    
+client.AllowListener("round_start");
+client.AllowListener("inferno_expire");
+client.AllowListener("inferno_extinguish");
+client.AllowListener("molotov_detonate");
+client.AllowListener("hegrenade_detonate");
+client.AllowListener("flashbang_detonate");
+callbacks.Register("FireGameEvent", "EventHookG", EventHook);
+callbacks.Register( "Draw", "DrawingHookG", DrawingHook );
+callbacks.Register( "DrawESP", "ESPHookG", ESPHook );
 
-local function onStep(player)    
-    local curtime = globals.CurTime()
-    local local_x, local_y, local_z = entities.GetLocalPlayer():GetAbsOrigin()
-    local max_distance = Distance_Slider:GetValue()*10
-    local x, y, z = player:GetAbsOrigin()
+drawBar = false
+firstTime = 0
+timeSincePlant = 0
+fill = 0
+fps = "fps";
+count = 0;
+last = globals.RealTime();
+r = 0
+g = 0
+b = 0
+stoplagwithcolourpicking = 1
+configs = {}
+v = {}
+
+fontTable =
+{
+  [0] = "Arial",
+  [1] = "Arial Bold",
+  [2] = "Calibri",
+  [3] = "Comic Sans MS",
+  [4] = "Tahoma"
+}
+
+function colourBcDumbass(value)
+
+    if value == 0 then
     
-    if ((player:GetIndex() ~= GetLocalPlayerIndex ) and isEnemy(player)) then
-        if x ~= nil and local_x ~= nil then
-            if max_distance > distance(local_x, local_y, local_z, x, y, z) then
-                table.insert(steps, {curtime, x, y, z, player})
-            end
-        else
-        end
+        r = 255
+        g = 0
+        b = 0
+    
     end
+    
+    if value == 1 then
+    
+        r = 0
+        g = 255
+        b = 0
+    
+    end
+    
+    if value == 2 then
+    
+        r = 0
+        g = 0
+        b = 255
+    
+    end
+    
+    if value == 3 then
+    
+        r = 255
+        g = 255
+        b = 255
+    
+    end
+    
+    if value == 4 then
+    
+        r = 0
+        g = 0
+        b = 0
+    
+    end
+
 end
 
-function onStepEvent( event )
-    if Enable_Checkbox:GetValue() then
-        if ( entities.GetLocalPlayer() ~= nil ) then
-        if ( event:GetName( ) ~= 'player_footstep' ) then
-            return
-        end
+otheroptions = gui.Reference("VISUALS", "OTHER", "Options")
+groupoptions = gui.Groupbox(otheroptions, "vers' bomb timer", 0, 270, 210, 270)
 
-        local uId = event:GetInt( 'userid' )
-        local ply = entities.GetByUserID( uId )
+enabled = gui.Checkbox( groupoptions, "enabled", "Enabled", true ) 
+
+textoptions = gui.Groupbox(groupoptions, "text options", 0, 30, 180, 200)
+
+timerText = gui.Checkbox( textoptions, "timerText" , "Enable Timer Text", true )
+fontSize = gui.Slider( textoptions, "fontSize" , "Font Size", 15, 1, 50 )
+
+fontName = gui.Combobox( textoptions, "fontName", "Font", 
+
+    "Arial", 
+    "Arial (Bold)", 
+    "Calibri", 
+    "Comic Sans", 
+    "Tahoma"
+    
+)
+
+fontColour = gui.Combobox( textoptions, "fontColour", "Colour", 
+
+    "Red", 
+    "Green", 
+    "Blue", 
+    "White", 
+    "Black"
+
+)
+
+timerEnabled = 1
+timerTextEnabled = 1
+fontSizeLua = 22.4
+fontUsed = 1
+fontColourUsed = 3
+
+function openCfg()
+
+
+    local Configuration = file.Open("BombTimeCFG", "r")
+    
+    if Configuration==nil then
+    
+        timerEnabled = 1
+        timerTextEnabled = 1
+        fontSizeLua = 22.4
+        fontUsed = 1
+        fontColourUsed = 3
+    
+        importCfg()
+                
+    else
         
-        if ( ply ~= nil ) then
-            local playerName = ply:GetName()
-            onStep(ply)
-        end
-        end
+        a = GetFirstLine(Configuration:Read())
+        
+        Configuration:Close()
+    
     end
+    
 end
-client.AllowListener( 'player_footstep' )
-callbacks.Register( 'FireGameEvent', 'onStep Event', onStepEvent )
 
-local function onDrawStep()
-    if Enable_Checkbox:GetValue() then
-        if #steps > 0 then
-            local curtime = globals.CurTime()
-            local r, g, b, a = math.floor(R_Slider:GetValue()), math.floor(G_Slider:GetValue()), math.floor(B_Slider:GetValue()), math.floor(A_Slider:GetValue())
-            local duration = Duration_Slider:GetValue()*0.1
-            local steps_new = {}
-            
-            for i=1, #steps do
-                local step = steps[i]
+function boolCheck(input)
 
-                if step[1] + duration > curtime then
-                    local time_since_step = curtime - step[1]
-                    local opacity_multiplier = 1
-                    local size_multiplier = ((time_since_step) / duration)
-                    if duration-time_since_step < duration then
-                        opacity_multiplier = (duration - time_since_step) / duration
-                    end
-                    opacity_multiplier = math.min(opacity_multiplier, 1)
-                    opacity_multiplier = math.max(opacity_multiplier, 0)
-
-                    local wx, wy = client.WorldToScreen(step[2], step[3], step[4])
-                    local tx, ty = client.WorldToScreen(step[2], step[3], step[4])
-
-                    if wx ~= nil then
-                        local size = 120
-                        local width = 20
-                        width = width + (1-size_multiplier)*2    
-                        if ( entities.GetLocalPlayer() ~= nil ) then
-                            drawCircle(step[2], step[3], step[4], size_multiplier*Size_Slider:GetValue(), math.floor(Thickness_Slider:GetValue()), 15, r, g, b, a*opacity_multiplier)
-                        end
-                        if Name_Checkbox:GetValue() then
-                            local text_size = draw.GetTextSize()
-                            local pName = (step[5]:GetName())
-                            draw.Text(tx-Size_Slider:GetValue(), ty, pName)
-                        end
-                    end
-                    table.insert(steps_new, step)
-                end
-            end
-            steps = steps_new
-        end
+    if input == true then
+    
+        return 1
+    
+    else
+    
+        return 0
+        
     end
-end
-callbacks.Register( "Draw", "Draw Step ESP", onDrawStep)
-
-
-
-
-local function distance3d(x1, y1, z1, x2, y2, z2)
-   return math.sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) + (z2-z1)*(z2-z1))
+    
 end
 
+function saveCfg()
 
+    timerEnabled = enabled:GetValue()
+    timerTextEnabled = timerText:GetValue()
+    fontSizeLua = math.floor(fontSize:GetValue())
+    fontUsed = fontName:GetValue()
+    fontColourUsed = fontColour:GetValue()
+    
+    local ConfigFile = file.Open( "BombTimeCFG", "w" )
+    
+    ConfigFile:Write(boolCheck(timerEnabled).."\n")
+    ConfigFile:Write(boolCheck(timerTextEnabled).."\n")
+    ConfigFile:Write(fontSizeLua..  "\n")
+    ConfigFile:Write(fontUsed.."\n")
+    ConfigFile:Write(fontColourUsed.."\n")
+    
+    ConfigFile:Close()
 
-local msc_p2 = gui.Reference("MISC", "AUTOMATION", "Other")
-local GroupBox = gui.Groupbox( msc_p2, "Zeus Range", 0, 75, 213, 150 );
-local ActiveCheckBox = gui.Checkbox(GroupBox, "Active", "Activate", false)
-local Tyleline = gui.Combobox( GroupBox, 'Type_line',"Type line", "Single line","Multi line")
-local colortype = gui.Combobox( GroupBox, 'Type_color',"Color", "Single color","Multi color")
-local function lerp_pos(x1, y1, z1, x2, y2, z2, percentage)
-   local x = (x2 - x1) * percentage + x1
-   local y = (y2 - y1) * percentage + y1
-   local z = (z2 - z1) * percentage + z1
-   return x, y, z
 end
 
-local function trace_line_skip_teammates( x1, y1, z1, x2, y2, z2, max_traces)
 
-   local max_traces = max_traces or 10
-   local fraction, entindex_hit = 0, -1
-   local x_hit, y_hit, z_hit = x1, y1, z1
 
-   local i=1
-   while (entindex_hit == -1 ) and 1 > fraction and max_traces >= i do
-   fraction, entindex_hit = engine.TraceLine( x_hit, y_hit, z_hit, x2, y2, z2,3)
+function importCfg()
 
-       x_hit, y_hit, z_hit = lerp_pos(x_hit, y_hit, z_hit, x2, y2, z2, 1)
 
+    gui.SetValue( "enabled", timerEnabled)
+    gui.SetValue( "timerText", timerTextEnabled)
+    gui.SetValue( "fontSize", fontSizeLua )
+    gui.SetValue( "fontName", fontUsed )
+    gui.SetValue( "fontColour", fontColourUsed )
+    
+    saveCfg()
+    
+end
+
+function GetFirstLine(input)
+
+    local count = 0
+    
+    for i in string.gmatch(input, "%S+") do
+        
+        v[count] = i
+        
+        count = count + 1
+        
+    end
+    
+    timerEnabled = icbatomakenicecodeanymore(v[0])
+    timerTextEnabled = icbatomakenicecodeanymore(v[1])
+    fontSizeLua = v[2]
+    fontUsed = v[3]
+    fontColourUsed = v[4]
+    
+    v = 0
+        
+    importCfg()
+    
+end
+
+local frametimes = {}
+local fps_prev = 0;
+
+local function accumulate_fps()
+   local ft = globals.AbsoluteFrameTime()
+   if ft > 0 then
+       table.insert(frametimes, 1, ft)
+   end
+
+   local count = #frametimes
+   if count == 0 then
+       return 0
+   end
+
+   local i, accum = 0, 0
+   while accum < 0.5 do
        i = i + 1
-   end
-
-   local traveled_total = distance3d(x1, y1, z1, x_hit, y_hit, z_hit)
-   local total_distance = distance3d(x1, y1, z1, x2, y2, z2)
-
-   return traveled_total/total_distance, entindex_hit
-end
-
-local function hsv_to_rgb(h, s, v, a)
- local r, g, b
-
- local i = math.floor(h * 6);
- local f = h * 6 - i;
- local p = v * (1 - s);
- local q = v * (1 - f * s);
- local t = v * (1 - (1 - f) * s);
-
- i = i % 6
-
- if i == 0 then r, g, b = v, t, p
- elseif i == 1 then r, g, b = q, v, p
- elseif i == 2 then r, g, b = p, v, t
- elseif i == 3 then r, g, b = p, q, v
- elseif i == 4 then r, g, b = t, p, v
- elseif i == 5 then r, g, b = v, p, q
- end
-
- return r * 255, g * 255, b * 255, a * 255
-end
-
-
-
-
-local weapon_name_prev = nil
-local last_switch = 0
-local accuracy = 2.5
-
-local is_taser;
-local is_knife;
-local function on_item_equip(Event)
-
-   if (Event:GetName() ~= 'item_equip') then
-       return;
-   end
-
-   local local_player, userid, item, weptype = client.GetLocalPlayerIndex(), Event:GetInt('userid'), Event:GetString('item'), Event:GetInt('weptype');
-
-
-   if (local_player == client.GetPlayerIndexByUserID(userid)) then
-       if (item == "taser" ) then
-          is_taser=true;
-          is_knife=false;
-       elseif (item=="knife")then
-       is_knife=true;
-        is_taser=false;
-       else 
-       is_knife=false;
-           is_taser=false;
+       accum = accum + frametimes[i]
+       if i >= count then
+           break
        end
    end
+   accum = accum / i
+   while i < count do
+       i = i + 1
+       table.remove(frametimes)
+   end
+ 
+   local fps = 1 / accum
+   local rt = globals.RealTime()
+   if math.abs(fps - fps_prev) > 4 or rt - last_update_time > 2 then
+       fps_prev = fps
+       last_update_time = rt
+   else
+       fps = fps_prev
+   end
+ 
+   return math.floor(fps + 0.5)
 end
 
+function bomb(event)
+        
+    if event:GetName() == "bomb_planted" then
+        
+        drawBar = true
+        plantedTime = globals.CurTime()
+        
+    end
+    
+    if event:GetName() == "round_end" then
+    
+        drawBar = false
+        firstTime = 0
+        fill = 0
+        stoplagwithcolourpicking = 1
+        saveCfg()
+        
+    end
+    
+end
 
-client.AllowListener('item_equip');
-callbacks.Register("FireGameEvent", "on_item_equip", on_item_equip);
+function drawTimer()
 
+    if drawBar == true then
+        
+        if enabled:GetValue() == true then 
+        
+            local c4 = entities.FindByClass("CPlantedC4")            
+            c4time = math.floor(c4[1]:GetProp("m_flTimerLength"))
+            local screenX, screenY = draw.GetScreenSize()
+            
+            local godownby = (screenY / c4time) / accumulate_fps()
+            
+            draw.Color(0,255,0,255)
+            draw.FilledRect(0, fill, 10, screenY) 
 
-local function on_paint()
+            draw.Color(0,0,0,100)
+            draw.FilledRect( 0, 0, 10, screenY )
+                    
+            if timerText:GetValue() == true then
+            
+                if stoplagwithcolourpicking == 1 then
+            
+                    colourBcDumbass(fontColour:GetValue())
+                    stoplagwithcolourpicking = 0
+                
+                end
+                
+                draw.Color(r,g,b)
+                draw.SetFont(     draw.CreateFont( fontTable[fontName:GetValue()], math.floor(fontSize:GetValue()) , 150) )
+                draw.TextShadow( 2, fill, math.floor((plantedTime - globals.CurTime()) + c4time))
 
-if ActiveCheckBox:GetValue() then
-   local local_player = entities.GetLocalPlayer();
-   local curtime = globals.CurTime()
-
-
-
-   local ranges
-   local ranges_opacities
-   if  is_taser then
-       ranges = {167}
-       ranges_opacities = {1}
-elseif is_knife then
-       ranges = {32}
-       ranges_opacities = {1}
-   end
-
-   if ranges == nil then
-       return
-   end
-    local Entity = entities.GetLocalPlayer();
-     local Alive = Entity:IsAlive();
-     if (Alive ~=true) then
-     return
-     
-     end
-   local local_x, local_y, local_z = Entity:GetAbsOrigin()
-   local_z=local_z+45
-   local vo_z = Entity:GetProp("localdata", "m_vecViewOffset[2]")-40
-local range
-local range2 
-fade_multiplier = 1
-if (Tyleline:GetValue() ==0) then
-   for i=1, #ranges do
-       range2=  ranges[i]
-       range = ranges[i]
-       
-       local opacity_multiplier = ranges_opacities[i] * fade_multiplier
-
-       local previous_world_x, previous_world_y
-
-       for rot=0, 360, accuracy do
-           local rot_temp = math.rad(rot)
-           local temp_x, temp_y, temp_z = local_x + range * math.cos(rot_temp), local_y + range * math.sin(rot_temp), local_z
-       
-           local fraction, entindex_hit = trace_line_skip_teammates( local_x, local_y, local_z, temp_x, temp_y, temp_z)
-
-           --local fraction_x, fraction_y = local_x+(temp_x-local_x)*fraction, local_y+(temp_y-local_y)*fraction
-           local fraction_x, fraction_y = lerp_pos(local_x, local_y, local_z, temp_x, temp_y, temp_z, fraction)
-           local world_x, world_y = client.WorldToScreen( fraction_x, fraction_y, temp_z+(range2-range))
-
-           local hue_extra = globals.RealTime() % 8 / 8
-           local r, g, b = hsv_to_rgb(rot/360+hue_extra, 1, 1, 255)
-
-           local fraction_multiplier = 1
-           if fraction > 0.9 then
-               fraction_multiplier = 0.6
-           end
-
-           if world_x ~= nil and previous_world_x ~= nil then
-           if colortype:GetValue()==1 then
-           draw.Color( r, g, b, 255*opacity_multiplier*fraction_multiplier)
-           end
-               draw.Line( world_x, world_y, previous_world_x, previous_world_y )
-           
+            end        
                         
-           end
-           previous_world_x, previous_world_y = world_x, world_y
-       end
-   end
-else 
-   for i=1, #ranges do
-       range2=  ranges[i]
-       range = ranges[i]
-       end
-       
-   while range >5 do
-   for i=1, #ranges do
-   
-       
-       local opacity_multiplier = ranges_opacities[i] * fade_multiplier
-
-       local previous_world_x, previous_world_y
-
-       for rot=0, 360, accuracy do
-           local rot_temp = math.rad(rot)
-           local temp_x, temp_y, temp_z = local_x + range * math.cos(rot_temp), local_y + range * math.sin(rot_temp), local_z
-       
-           local fraction, entindex_hit = trace_line_skip_teammates( local_x, local_y, local_z, temp_x, temp_y, temp_z)
-
-           --local fraction_x, fraction_y = local_x+(temp_x-local_x)*fraction, local_y+(temp_y-local_y)*fraction
-           local fraction_x, fraction_y = lerp_pos(local_x, local_y, local_z, temp_x, temp_y, temp_z, fraction)
-           local world_x, world_y = client.WorldToScreen( fraction_x, fraction_y, temp_z+(range2-range))
-
-           local hue_extra = globals.RealTime() % 8 / 8
-           local r, g, b = hsv_to_rgb(rot/360+hue_extra, 1, 1, 255)
-
-           local fraction_multiplier = 1
-           if fraction > 0.9 then
-               fraction_multiplier = 0.6
-           end
-
-           if world_x ~= nil and previous_world_x ~= nil then
-                   if colortype:GetValue()==1 then
-           draw.Color( r, g, b, 255*opacity_multiplier*fraction_multiplier)
-           end
-               draw.Line( world_x, world_y, previous_world_x, previous_world_y )
-           
-                        
-           end
-           previous_world_x, previous_world_y = world_x, world_y
-       end
-   end
-       for i=1, #ranges do
-   
-   
-       local opacity_multiplier = ranges_opacities[i] * fade_multiplier
-
-       local previous_world_x, previous_world_y
-
-       for rot=0, 360, accuracy do
-           local rot_temp = math.rad(rot)
-           local temp_x, temp_y, temp_z = local_x + range * math.cos(rot_temp), local_y + range * math.sin(rot_temp), local_z
-       
-           local fraction, entindex_hit = trace_line_skip_teammates( local_x, local_y, local_z, temp_x, temp_y, temp_z)
-
-           --local fraction_x, fraction_y = local_x+(temp_x-local_x)*fraction, local_y+(temp_y-local_y)*fraction
-           local fraction_x, fraction_y = lerp_pos(local_x, local_y, local_z, temp_x, temp_y, temp_z, fraction)
-           local world_x, world_y = client.WorldToScreen( fraction_x, fraction_y, temp_z+(range-range2))
-
-           local hue_extra = globals.RealTime() % 8 / 8
-           local r, g, b = hsv_to_rgb(rot/360+hue_extra, 1, 1, 255)
-
-           local fraction_multiplier = 1
-           if fraction > 0.9 then
-               fraction_multiplier = 0.6
-           end
-
-           if world_x ~= nil and previous_world_x ~= nil then
-                   if colortype:GetValue()==1 then
-           draw.Color( r, g, b, 255*opacity_multiplier*fraction_multiplier)
-           end
-               draw.Line( world_x, world_y, previous_world_x, previous_world_y )
-           
-                        
-           end
-           previous_world_x, previous_world_y = world_x, world_y
-       end
-   end
-   range =range-10
-   end
-
-   
-
-   end
-end
+            fill = fill + godownby
+            
+        end
+        
+    end
+        
 end
 
+client.AllowListener( 'bomb_planted' );
+client.AllowListener( 'round_end' );
+
+callbacks.Register( 'FireGameEvent', 'BombTimerPlantEvent', bomb );
+callbacks.Register( 'Draw', 'BombTimerDraw', drawTimer );
+
+openCfg()
 
 
-callbacks.Register( "Draw", "on_paint", on_paint);
+
