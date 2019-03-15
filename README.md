@@ -1,17 +1,18 @@
 # Aimware-LUA-
-Lua Pack include 
+Lua Pack Include 
 
 - Hitbox Hit
-- Quickpeek
-- Grenade timers
-- Viewmodel changer
+- Quickpeek 
+- Grenade Timers
+- Viewmodel Changer
+- Bomb Info
 - Sniper Crosshair
 - Disablepostprocessing
 
-WASD Indicator include
+WASD Indicator Include
 
 - WASD Indicator
-- Shift and Space Indicator
-- Fake Duck Indicator bind on C
-- Slow Walk Indicator bind on X
+- Shift And Space Indicator
+- Fake Duck Indicator Bind On C
+- Slow Walk Indicator Bind On X
 
