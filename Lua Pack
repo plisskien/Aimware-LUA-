@@ -354,39 +354,3 @@ function colourBcDumbass(value)
 
 end
 
-otheroptions = gui.Reference("VISUALS", "OTHER", "Options")
-groupoptions = gui.Groupbox(otheroptions, "vers' bomb timer", 0, 270, 210, 270)
-
-enabled = gui.Checkbox( groupoptions, "enabled", "Enabled", true ) 
-
-textoptions = gui.Groupbox(groupoptions, "text options", 0, 30, 180, 200)
-
-timerText = gui.Checkbox( textoptions, "timerText" , "Enable Timer Text", true )
-fontSize = gui.Slider( textoptions, "fontSize" , "Font Size", 15, 1, 50 )
-
-fontName = gui.Combobox( textoptions, "fontName", "Font", 
-
-    "Arial", 
-    "Arial (Bold)", 
-    "Calibri", 
-    "Comic Sans", 
-    "Tahoma"
-    
-)
-
-fontColour = gui.Combobox( textoptions, "fontColour", "Colour", 
-
-    "Red", 
-    "Green", 
-    "Blue", 
-    "White", 
-    "Black"
-
-)
-
-timerEnabled = 1
-timerTextEnabled = 1
-fontSizeLua = 22.4
-fontUsed = 1S
-fontColourUsed = 3
-
