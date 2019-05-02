@@ -2,7 +2,6 @@
 Lua Pack Include 
 
 - Hitbox Hit
-- Quickpeek 
 - Grenade Timers
 - Viewmodel Changer
 - Sniper Crosshair
