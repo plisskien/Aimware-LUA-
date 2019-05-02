@@ -5,7 +5,6 @@ Lua Pack Include
 - Quickpeek 
 - Grenade Timers
 - Viewmodel Changer
-- Bomb Info
 - Sniper Crosshair
 - Disablepostprocessing
 
