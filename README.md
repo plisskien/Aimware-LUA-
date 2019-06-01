@@ -1,6 +1,7 @@
 # Aimware-LUA-
 Lua Pack Include 
 
+- Bomb Info
 - Hitbox Hit
 - Grenade Timers
 - Viewmodel Changer
