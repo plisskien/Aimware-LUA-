@@ -203,11 +203,11 @@ local updatetick = 0;
 local grenades = {};
 
 function EventHook(Event)
-
+-- Clean table on round start
 if Event:GetName() == "round_start" then
 grenades = {};
 end
-
+-- Remove expired grenades from Table
 if Event:GetName() == "hegrenade_detonate" or Event:GetName() == "flashbang_detonate" 
 or Event:GetName() == "inferno_expire" or Event:GetName() == "inferno_extinguish" then 
 updatetick = globals.TickCount(); 
@@ -217,6 +217,7 @@ table.remove(grenades, index);
 end
 end 
 end
+
 end
 
 function ESPHook(Builder)
@@ -241,6 +242,7 @@ local gMatrix = {Builder:GetEntity():GetIndex(), globals.TickCount()};
 table.insert(grenades, gMatrix);
 end
 end
+
 end
 
 function DrawingHook() 
@@ -275,82 +277,18 @@ end
 end
 end
 
+-- Grenade timers by Nyanpasu! (- Luiz)
+
 client.AllowListener("round_start");
 client.AllowListener("inferno_expire");
 client.AllowListener("inferno_extinguish");
 client.AllowListener("molotov_detonate");
 client.AllowListener("hegrenade_detonate");
 client.AllowListener("flashbang_detonate");
+
 callbacks.Register("FireGameEvent", "EventHookG", EventHook);
 callbacks.Register( "Draw", "DrawingHookG", DrawingHook );
 callbacks.Register( "DrawESP", "ESPHookG", ESPHook );
-
-drawBar = false
-firstTime = 0
-timeSincePlant = 0
-fill = 0
-fps = "fps";
-count = 0;
-last = globals.RealTime();
-r = 0
-g = 0
-b = 0
-stoplagwithcolourpicking = 1
-configs = {}
-v = {}
-
-fontTable =
-{
-  [0] = "Arial",
-  [1] = "Arial Bold",
-  [2] = "Calibri",
-  [3] = "Comic Sans MS",
-  [4] = "Tahoma"
-}
-
-function colourBcDumbass(value)
-
-    if value == 0 then
-    
-        r = 255
-        g = 0
-        b = 0
-    
-    end
-    
-    if value == 1 then
-    
-        r = 0
-        g = 255
-        b = 0
-    
-    end
-    
-    if value == 2 then
-    
-        r = 0
-        g = 0
-        b = 255
-    
-    end
-    
-    if value == 3 then
-    
-        r = 255
-        g = 255
-        b = 255
-    
-    end
-    
-    if value == 4 then
-    
-        r = 0
-        g = 0
-        b = 0
-    
-    end
-
-end
 
 --no blood 
 
