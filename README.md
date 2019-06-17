@@ -15,3 +15,10 @@ WASD Indicator Include
 - Fake Duck Indicator Bind On C
 - Slow Walk Indicator Bind On X
 
+Legit Anti Aim
+
+ - Enable
+ - Left 
+ - Right
+ - Indicators
+
