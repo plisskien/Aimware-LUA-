@@ -21,4 +21,9 @@ Legit Anti Aim
  - Left 
  - Right
  - Indicators
+ 
+ SmartFakelag
+ 
+ 
+ 
 
