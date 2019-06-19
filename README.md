@@ -24,6 +24,9 @@ Legit Anti Aim
  
  SmartFakelag
  
+  - Different options for fake lag 
+  source https://bit.ly/2KYbjYE
+ 
  
  
 
