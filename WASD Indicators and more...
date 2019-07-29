@@ -1,4 +1,3 @@
-
 --WASD,Indicartors
 
 local VA_Pitch, VA_Yaw, VA_Roll;
@@ -26,8 +25,6 @@ if entities.GetLocalPlayer() == nil then
      return
 end
 
-local x, y = draw.GetScreenSize()
-
 local font1 = draw.CreateFont('RawengulkSank', 43)
 local font2 = draw.CreateFont('RawengulkSank', 15)
 local font3 = draw.CreateFont('Verdana', 30, 700)
@@ -40,6 +37,7 @@ local font3 = draw.CreateFont('Verdana', 30, 700)
            draw.Color(150, 150, 150, 255)
            end
           draw.Text(946, 750, "W")
+          draw.TextShadow(946, 750, "W")
            
 
            if input.IsButtonDown( 83 ) then
@@ -48,6 +46,7 @@ local font3 = draw.CreateFont('Verdana', 30, 700)
            draw.Color(150, 150, 150, 255)
            end
           draw.Text(952, 790, "S")
+          draw.TextShadow(952, 790, "S")
            
            
            if input.IsButtonDown( 65 ) then
@@ -56,6 +55,7 @@ local font3 = draw.CreateFont('Verdana', 30, 700)
            draw.Color(150, 150, 150, 255)
            end
           draw.Text(912, 790, "A")
+          draw.TextShadow(912, 790, "A")
            
            
            if input.IsButtonDown( 68 ) then
@@ -64,6 +64,7 @@ local font3 = draw.CreateFont('Verdana', 30, 700)
            draw.Color(150, 150, 150, 255)
            end
           draw.Text(990, 790, "D")
+          draw.TextShadow(990, 790, "D")
            
            
            if input.IsButtonDown( 32 ) then
@@ -72,6 +73,7 @@ local font3 = draw.CreateFont('Verdana', 30, 700)
            draw.Color(150, 150, 150, 255)
            end
           draw.Text(910, 800, "_____")
+          draw.TextShadow(910, 800, "_____")
 		  
 		  draw.SetFont(font3)
           
@@ -82,22 +84,40 @@ local font3 = draw.CreateFont('Verdana', 30, 700)
             draw.Color(150, 150, 150, 255)
              end
              draw.Text(830, 824, "Shift")
-             
-          --Fake Duck
-		   if input.IsButtonDown( 67 ) then
-          draw.Color(0, 255, 0, 255)
-           else
-           draw.Color(150, 150, 150, 0)
-           end
-          draw.Text(895, 850, "Fake Duck")
-          
-          --Slow Walk
-		  if input.IsButtonDown( 88 ) then
-          draw.Color(0, 255, 0, 255)
-           else
-           draw.Color(150, 150, 150, 0)
-           end
-          draw.Text(895, 850, "Slow Walk")
+             draw.TextShadow(830, 824, "Shift")
 
 end 
 callbacks.Register('Draw', 'draw_buttons', draw_buttons);
+
+--Fake Duck
+
+local font0 = draw.CreateFont('Verdana', 30, 700)
+local FDKey=gui.GetValue("rbot_antiaim_fakeduck");
+local function Main()
+draw.SetFont(RenderFont)
+draw.Color(128, 0, 0, 255)
+if input.IsButtonDown(FDKey) then
+draw.SetFont(font0)
+draw.Text(895, 850, "Fake Duck")
+draw.TextShadow(895, 850, "Fake Duck")
+end
+end
+callbacks.Register( "Draw", "FD", Main);
+
+--Slow Wakl
+
+local font1 = draw.CreateFont('Verdana', 30, 700)
+local SWKey=gui.GetValue("msc_slowwalk");
+local function Main()
+draw.SetFont(RenderFont)
+draw.Color(128, 0, 0, 255)
+if input.IsButtonDown(SWKey) then
+draw.SetFont(font1)
+draw.Text(895, 850, "Slow Walk")
+draw.TextShadow(895, 850, "Slow Walk")
+end
+end
+callbacks.Register( "Draw", "SW", Main);
+
+
+
