@@ -11,9 +11,9 @@ Lua Pack Include
 WASD Indicator Include
 
 - WASD Indicator
-- Shift And Space  Indicator
-- Fake Duck Indicator Bind On C
-- Slow Walk Indicator Bind On X
+- Shift And Space Indicator
+- Fake Duck Indicator
+- Slow Walk Indicator
 
 Legit Anti Aim
 
