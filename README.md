@@ -15,8 +15,8 @@ Aimware.net Watermark LUA
  - Deaths
  
  SS Watermark
- <blockquote class="imgur-embed-pub" lang="en" data-id="EuCGSFM"><a href="https://imgur.com/EuCGSFM">View post on imgur.com</a>
-
+ https://imgur.com/EuCGSFM
+ 
 Lua Pack Include 
 
 - Bomb Info
