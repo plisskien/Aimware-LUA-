@@ -1,4 +1,19 @@
 # Aimware-LUA-
+WASD Indicator Include
+
+- WASD Indicator
+- Shift And Space Indicator
+- Fake Duck Indicator
+- Slow Walk Indicator
+
+Aimware.net Watermark LUA
+
+ - Aimware.net
+ - PING
+ - FPS
+ - Kills
+ - Deaths
+
 Lua Pack Include 
 
 - Bomb Info
@@ -7,13 +22,6 @@ Lua Pack Include
 - Viewmodel Changer
 - Sniper Crosshair
 - Disablepostprocessing
-
-WASD Indicator Include
-
-- WASD Indicator
-- Shift And Space Indicator
-- Fake Duck Indicator
-- Slow Walk Indicator
 
 Legit Anti Aim
 
