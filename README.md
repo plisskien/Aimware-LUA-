@@ -14,6 +14,9 @@ Aimware.net Watermark LUA
  - Kills
  - Deaths
  
+ Font KaushanScript-Regular
+ https://bit.ly/2Zx802e
+
  SS Watermark
  https://imgur.com/EuCGSFM
  
