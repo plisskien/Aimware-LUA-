@@ -13,7 +13,7 @@ Aimware.net Watermark LUA
  - FPS
  - Kills
  - Deaths
-<blockquote class="imgur-embed-pub" lang="en" data-id="EuCGSFM"><a href="https://imgur.com/EuCGSFM">View post on imgur.com</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
+https://imgur.com/EuCGSFM
 
 Lua Pack Include 
 
