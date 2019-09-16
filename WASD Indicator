@@ -1,0 +1,167 @@
+--WASD,Indicartors
+
+local VA_Pitch, VA_Yaw, VA_Roll;
+local alpha = 0
+local p_local = entities.GetLocalPlayer();
+
+function UCMD_GetAngles( UCMD )
+   VA_Pitch, VA_Yaw, VA_Roll = UCMD:GetViewAngles();
+    if input.IsButtonDown( 32 ) then
+        if alpha < 248 then
+            alpha = alpha + 8
+        end
+    else
+        if alpha > 7 then
+            alpha = alpha - 8
+        end
+    end
+    
+end
+
+callbacks.Register( 'CreateMove', 'GetAngles', UCMD_GetAngles );
+
+function draw_buttons()
+if entities.GetLocalPlayer() == nil then
+     return
+end
+
+local font1 = draw.CreateFont('RawengulkSank', 43)
+local font2 = draw.CreateFont('RawengulkSank', 15)
+local font3 = draw.CreateFont('Verdana', 30, 700)
+         
+           draw.SetFont(font1)
+
+          if input.IsButtonDown( 87 ) then
+          draw.Color(128, 0, 0, 255)
+           else
+           draw.Color(150, 150, 150, 255)
+           end
+          draw.Text(946, 750, "W")
+          draw.TextShadow(946, 750, "W")
+           
+
+           if input.IsButtonDown( 83 ) then
+          draw.Color(128, 0, 0, 255)
+           else
+           draw.Color(150, 150, 150, 255)
+           end
+          draw.Text(952, 790, "S")
+          draw.TextShadow(952, 790, "S")
+           
+           
+           if input.IsButtonDown( 65 ) then
+          draw.Color(128, 0, 0, 255)
+           else
+           draw.Color(150, 150, 150, 255)
+           end
+          draw.Text(912, 790, "A")
+          draw.TextShadow(912, 790, "A")
+           
+           
+           if input.IsButtonDown( 68 ) then
+          draw.Color(128, 0, 0, 255)
+           else
+           draw.Color(150, 150, 150, 255)
+           end
+          draw.Text(990, 790, "D")
+          draw.TextShadow(990, 790, "D")
+           
+           
+           if input.IsButtonDown( 32 ) then
+          draw.Color(128, 0, 0, 255)
+           else
+           draw.Color(150, 150, 150, 255)
+           end
+          draw.Text(910, 800, "_____")
+          draw.TextShadow(910, 800, "_____")
+		  
+		  draw.SetFont(font3)
+          
+          --Shift
+          if input.IsButtonDown( 16 ) then
+            draw.Color(128, 0, 0, 255)
+             else
+            draw.Color(150, 150, 150, 255)
+             end
+             draw.Text(830, 824, "Shift")
+             draw.TextShadow(830, 824, "Shift")
+
+end 
+callbacks.Register('Draw', 'draw_buttons', draw_buttons);
+
+--Fake Duck
+
+local font0 = draw.CreateFont('Verdana', 30, 700)
+local FDKey=gui.GetValue("rbot_antiaim_fakeduck");
+local function Main()
+draw.SetFont(RenderFont)
+draw.Color(128, 0, 0, 255)
+if input.IsButtonDown(FDKey) then
+draw.SetFont(font0)
+draw.Text(895, 850, "Fake Duck")
+draw.TextShadow(895, 850, "Fake Duck")
+end
+end
+callbacks.Register( "Draw", "FD", Main);
+
+--Slow Wakl
+
+local font1 = draw.CreateFont('Verdana', 30, 700)
+local SWKey=gui.GetValue("msc_slowwalk");
+local function Main()
+draw.SetFont(RenderFont)
+draw.Color(128, 0, 0, 255)
+if input.IsButtonDown(SWKey) then
+draw.SetFont(font1)
+draw.Text(895, 850, "Slow Walk")
+draw.TextShadow(895, 850, "Slow Walk")
+end
+end
+callbacks.Register( "Draw", "SW", Main);
+
+--fake angles
+
+local reference = gui.Reference("VISUALS", "Other", "Options");
+
+
+local arrowR = gui.Slider(reference, "arrow_red", "Angle Arrow Red", 0, 0, 255);
+local arrowG = gui.Slider(reference, "arrow_green", "Angle Arrow Green", 0, 0, 255);
+local arrowB = gui.Slider(reference, "arrow_blue", "Angle Arrow Blue", 0, 0, 255);
+
+function anglearrows()
+
+local angle = {0, 0, 0}
+
+local LocalPlayer = entities.GetLocalPlayer()
+
+if LocalPlayer == nil then
+	return
+end
+
+local angle = LocalPlayer:GetPropFloat("m_flLowerBodyYawTarget") - angle[2]
+local font = draw.CreateFont("Verdana", 44);
+draw.SetFont(font);
+
+local w, h = draw.GetScreenSize()
+local w = w/2
+local h = h/2
+
+if angle >= 0 then
+	draw.Color(gui.GetValue("arrow_red"),gui.GetValue("arrow_green"),gui.GetValue("arrow_blue"),255);
+	--draw.Text(w-60,h-25, "?");
+	draw.Color(0,0,0,155);
+	--draw.Text(w+38, h-25, "?");
+elseif angle <= 0 then
+	draw.Color(gui.GetValue("arrow_red"),gui.GetValue("arrow_green"),gui.GetValue("arrow_blue"),255); -- 193,253,0
+	--draw.Text(w+38,h-25, "?");
+	draw.Color(0,0,0,155);
+	--draw.Text(w-60, h-25, "?");
+end
+
+end
+callbacks.Register("Draw", "anglearrows", anglearrows)
+
+
+
+
+
