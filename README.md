@@ -26,6 +26,8 @@ Aimware.net Watermark LUA
   - Disable Post Processing
   
   Simple LUA script which can improve your FPS
+  
+   # These scripts are not belongs to me, I have only modified them.
  
  
  
