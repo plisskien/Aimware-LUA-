@@ -27,7 +27,7 @@ Aimware.net Watermark LUA
   
   Simple LUA script which can improve your FPS
   
-   # These scripts are not belongs to me, I have only modified them.
+# These scripts are not belongs to me, I have modified them or i use them.
  
  
  
