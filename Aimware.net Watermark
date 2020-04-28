@@ -74,22 +74,16 @@ local function drawing_stuff( )
    if not entities.GetLocalPlayer() then
        return 
    end
-   local delay_shot = gui.GetValue( "rbot_delayshot" )
-    if accumulate_fps() > 80 then
-        r, g, b = 0, 255, 70
-        end
-    if accumulate_fps() < 80 then
-        r, g, b = 150, 255, 00
+   local fps = gui.GetValue( "rbot.hitscan.maxprocessingtime" )
+    if accumulate_fps() > 60 then
+        r, g, b = 0, 255, 0 --Green
         end
     if accumulate_fps() < 60 then
-		r, g, b = 255, 200, 0
-		end
-	if accumulate_fps() < 40 then
-		r, g, b = 255, 50, 0
-		end
-	if accumulate_fps() < 20 then
-	r, g, b = 255, 255, 0
-    end
+        r, g, b = 255, 165, 0 --Orange
+        end
+    if accumulate_fps() < 30 then
+		r, g, b = 255, 0, 0 --Red
+        end
 
 --Draw watermark
 
@@ -100,41 +94,34 @@ local function drawing_stuff( )
     draw.OutlinedRect( 1545, 8, 1898, 42 )
 
     draw.SetFont(font1)
+
     draw.Color(128, 0, 0, 255)
-    draw.Text(1555, 9, "Aimware.net")
-    draw.TextShadow(1555, 9, "Aimware.net")   
+    draw.TextShadow(1555, 12, "Aimware.net")   
 
     draw.SetFont(font2)
 
     draw.Color(0, 255, 0, 255)
-    draw.Text(1698, 18, m_iPing)
     draw.TextShadow(1698, 18, m_iPing)
-    draw.Text(1668, 18, "PING: ")
-    draw.TextShadow(1668, 18, "PING: ")
+    draw.TextShadow(1668, 18, "PING:")
 
     draw.Color(r,g,b,255)
-    draw.Text(1745, 18, accumulate_fps())
     draw.TextShadow(1745, 18, accumulate_fps())
-    draw.Text(1722, 18, "FPS:")
     draw.TextShadow(1722, 18, "FPS:")
 
     draw.Color(255, 255, 255, 255)
-    draw.Text(1769, 18, " ✜ ")
     draw.TextShadow(1769, 18, " ✜ ")
     
     draw.Color(255, 255, 255, 255)
-    draw.Text(1785, 18, #kills) 
-    draw.Text(1798, 18, "Kills")
+    draw.TextShadow(1785, 18, #kills) 
     draw.TextShadow(1798, 18, "Kills")
 
     draw.Color(255, 255, 255, 255)
-    draw.Text(1824, 18, " ☠ ")
+    draw.TextShadow(1824, 18, " ☠ ")
     draw.TextShadow(1824, 18, " ☠ ")
 
     draw.Color(255, 255, 255, 255)
-    draw.Text(1844, 18, #deaths)
-    draw.Text(1853, 18, " Deaths")
-    draw.TextShadow(1853, 18, " Deaths")
+    draw.TextShadow(1844, 18, #deaths)
+    draw.TextShadow(1853, 18, "Deaths")
    
 end
 
