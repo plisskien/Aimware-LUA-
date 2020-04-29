@@ -5,7 +5,7 @@ local deaths = {};
 local frametimes = {}
 local fps_prev = 0
 
-local font1 = draw.CreateFont('KaushanScript-Regular', 29)
+local font1 = draw.CreateFont('KaushanScript-Regular', 35)
 local font2 = draw.CreateFont('calibri', 15)
 
 local m_iPing = entities.GetPlayerResources():GetPropInt("m_iPing", client.GetLocalPlayerIndex())
@@ -85,18 +85,27 @@ local function drawing_stuff( )
 		r, g, b = 255, 0, 0 --Red
         end
 
+
+local i = math.floor(math.sin(globals.RealTime() * 1) * 127 + 128);
+local u = math.floor(math.sin(globals.RealTime() * 1 + 2) * 127 + 128);
+local y = math.floor(math.sin(globals.RealTime() * 1 + 4) * 127 + 128);
+
 --Draw watermark
 
-    draw.Color(25, 25, 25, 230)
-    draw.RoundedRectFill( 1545, 8, 1897, 41 )
+    draw.Color( 25, 25, 25, 200)
+    draw.FilledRect( 1545, 8, 1897, 41 )
 
-    draw.Color(128, 0, 0, 100)
+    draw.Color( 35, 35, 35, 200)
+    draw.FilledRect( 1540, 3, 1902, 46 )
+
+    draw.Color(128, 0, 0, 150)
     draw.OutlinedRect( 1545, 8, 1898, 42 )
+    draw.OutlinedRect( 1540, 3, 1902, 46 )
 
     draw.SetFont(font1)
 
     draw.Color(128, 0, 0, 255)
-    draw.TextShadow(1555, 12, "Aimware.net")   
+    draw.TextShadow(1560, 12, "Plisskien")   
 
     draw.SetFont(font2)
 
