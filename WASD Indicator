@@ -93,7 +93,7 @@ local function Main()
 draw.Color(0, 255, 0, 255)
 if input.IsButtonDown(FDKey) then
 draw.SetFont(font1)
-draw.TextShadow(908, 848, "FD")
+draw.TextShadow(965, 848, "FD")
 end
 end
 callbacks.Register( "Draw", "FD", Main);
@@ -106,7 +106,7 @@ local function Main()
 draw.Color(0, 255, 0, 255)
 if input.IsButtonDown(SWKey) then
 draw.SetFont(font1)
-draw.TextShadow(965, 848, "SW")
+draw.TextShadow(908, 848, "SW")
 end
 end
 callbacks.Register( "Draw", "SW", Main);
