@@ -26,7 +26,7 @@ if entities.GetLocalPlayer() == nil then
 end
 
 local font1 = draw.CreateFont('RawengulkSank', 43)
-local font2 = draw.CreateFont('RawengulkSank', 15)
+local font2 = draw.CreateFont('RawengulkSank', 30)
 local font3 = draw.CreateFont('Verdana', 30, 700)
          
            draw.SetFont(font1)
@@ -70,9 +70,27 @@ local font3 = draw.CreateFont('Verdana', 30, 700)
            draw.Color(150, 150, 150, 255)
            end
           draw.TextShadow(910, 800, "_____")
+
+          --Mouse
+
+          draw.SetFont(font2)
+
+          if input.IsButtonDown( 1 ) then
+            draw.Color(128, 0, 0, 255)
+             else
+             draw.Color(150, 150, 150, 255)
+             end
+            --draw.TextShadow(905, 835, "▬▬")
+
+            if input.IsButtonDown( 2 ) then
+                draw.Color(128, 0, 0, 255)
+                 else
+                 draw.Color(150, 150, 150, 255)
+                 end
+                --draw.TextShadow(970, 835, "▬▬")
 		  
-		  draw.SetFont(font3)
-          
+            draw.SetFont(font3)
+
           --Shift
           if input.IsButtonDown( 16 ) then
             draw.Color(128, 0, 0, 255)
@@ -80,6 +98,8 @@ local font3 = draw.CreateFont('Verdana', 30, 700)
             draw.Color(150, 150, 150, 255)
              end
              draw.TextShadow(830, 824, "Shift")
+
+
 end 
 callbacks.Register('Draw', 'draw_buttons', draw_buttons);
 
@@ -93,7 +113,7 @@ local function Main()
 draw.Color(0, 255, 0, 255)
 if input.IsButtonDown(FDKey) then
 draw.SetFont(font1)
-draw.TextShadow(965, 848, "FD")
+draw.TextShadow(0, 1000, "FD")
 end
 end
 callbacks.Register( "Draw", "FD", Main);
@@ -106,7 +126,7 @@ local function Main()
 draw.Color(0, 255, 0, 255)
 if input.IsButtonDown(SWKey) then
 draw.SetFont(font1)
-draw.TextShadow(908, 848, "SW")
+draw.TextShadow(0, 970, "SW")
 end
 end
 callbacks.Register( "Draw", "SW", Main);
