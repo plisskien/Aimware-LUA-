@@ -19,13 +19,6 @@ Aimware.net Watermark LUA
  
  SS Watermark
  https://imgur.com/EuCGSFM
- 
- Better FPS
- 
-  - No FOG
-  - Disable Post Processing
-  
-  Simple LUA script which can improve your FPS
   
 # These scripts are not belongs to me, I have modified them or i use them.
  
